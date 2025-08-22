@@ -1,0 +1,39 @@
+# Docker Compose para desenvolvimento local
+version: '3.8'
+
+services:
+  tennis-analyzer:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - ENVIRONMENT=development
+      - PORT=8080
+      - MEDIAPIPE_ENABLED=true
+    volumes:
+      # Mount para vídeos profissionais (desenvolvimento)
+      - ./profissionais:/app/profissionais:ro
+      # Mount para uploads temporários
+      - ./temp_uploads:/app/temp_uploads
+      # Mount para logs
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  # Opcional: Nginx para proxy reverso em produção
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - tennis-analyzer
+    profiles:
+      - production

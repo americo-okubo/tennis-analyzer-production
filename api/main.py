@@ -3589,21 +3589,42 @@ async def analyze_simple(
 
 
 if __name__ == "__main__":
-    # Development server
-    print("Servidor acessivel em:")
-    print("Desktop: http://localhost:8000/web_interface.html")
-    print("Mobile: http://192.168.15.4:8000/web_interface.html")
-    print("Conecte seu celular na mesma rede WiFi!")
-    print("DEBUG_STARTUP: API main.py iniciando...")
-    print("DEBUG_STARTUP: Endpoint /analyze-selected registrado")
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=port,
-        reload=False,  # Disable reload in production
-        log_level="info",
-        timeout_keep_alive=300,
-        limit_max_requests=1000,
-        limit_concurrency=1000
-    )
+    # Docker/GCP compatible configuration
+    port = int(os.environ.get("PORT", 8080))
+    environment = os.environ.get("ENVIRONMENT", "development")
+    
+    print("🎾 Tennis Analyzer - Starting...")
+    print(f"   Environment: {environment}")
+    print(f"   Port: {port}")
+    print(f"   MediaPipe: {'✅ Available' if MEDIAPIPE_AVAILABLE else '❌ Not Available'}")
+    
+    if environment == "development":
+        print("   Desktop: http://localhost:8080/web_interface.html")
+        print("   Conecte seu celular na mesma rede WiFi!")
+    
+    # Production-optimized settings for Docker/GCP
+    uvicorn_config = {
+        "app": "main:app",
+        "host": "0.0.0.0",
+        "port": port,
+        "reload": False,
+        "log_level": "info",
+        "access_log": True
+    }
+    
+    # Adjust settings based on environment
+    if environment == "production":
+        uvicorn_config.update({
+            "workers": 1,  # GCP Cloud Run works better with 1 worker
+            "timeout_keep_alive": 300,
+            "limit_concurrency": 100,
+            "limit_max_requests": 1000
+        })
+    else:
+        uvicorn_config.update({
+            "timeout_keep_alive": 300,
+            "limit_max_requests": 1000,
+            "limit_concurrency": 1000
+        })
+    
+    uvicorn.run(**uvicorn_config)
