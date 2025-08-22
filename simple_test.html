@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Auth Test</title>
+</head>
+<body>
+    <h1>Simple Authentication Test</h1>
+    
+    <div>
+        <button onclick="doLogin()">1. Login</button>
+        <span id="loginStatus"></span>
+    </div>
+    
+    <div>
+        <button onclick="testAuth()">2. Test Auth</button>
+        <span id="authStatus"></span>
+    </div>
+    
+    <div>
+        <input type="file" id="testFile" accept="video/*">
+        <button onclick="testValidation()">3. Test Validation</button>
+        <span id="validationStatus"></span>
+    </div>
+    
+    <div id="logs" style="background: #f0f0f0; padding: 10px; margin: 10px 0; white-space: pre-wrap; font-family: monospace;"></div>
+
+    <script>
+    const API_BASE = 'http://localhost:8004';
+    let currentToken = null;
+    
+    function log(message) {
+        console.log(message);
+        document.getElementById('logs').textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+    }
+    
+    async function doLogin() {
+        log('=== STARTING LOGIN ===');
+        
+        try {
+            const response = await fetch(`${API_BASE}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: "demo", password: "demo123" })
+            });
+            
+            log(`Login response status: ${response.status}`);
+            const data = await response.json();
+            log(`Login response: ${JSON.stringify(data)}`);
+            
+            if (data.access_token) {
+                currentToken = data.access_token;
+                localStorage.setItem('token', currentToken);
+                log(`Token received: ${currentToken.substring(0, 50)}...`);
+                document.getElementById('loginStatus').textContent = '✅ Success';
+                document.getElementById('loginStatus').style.color = 'green';
+            } else {
+                log('❌ Login failed - no token');
+                document.getElementById('loginStatus').textContent = '❌ Failed';
+                document.getElementById('loginStatus').style.color = 'red';
+            }
+        } catch (error) {
+            log(`❌ Login error: ${error.message}`);
+            document.getElementById('loginStatus').textContent = '❌ Error';
+            document.getElementById('loginStatus').style.color = 'red';
+        }
+    }
+    
+    async function testAuth() {
+        log('=== TESTING AUTH ===');
+        
+        const token = currentToken || localStorage.getItem('token');
+        if (!token) {
+            log('❌ No token available');
+            document.getElementById('authStatus').textContent = '❌ No Token';
+            document.getElementById('authStatus').style.color = 'red';
+            return;
+        }
+        
+        log(`Using token: ${token.substring(0, 50)}...`);
+        
+        try {
+            const response = await fetch(`${API_BASE}/auth/me`, {
+                method: 'GET',
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            log(`Auth test response status: ${response.status}`);
+            const data = await response.json();
+            log(`Auth test response: ${JSON.stringify(data)}`);
+            
+            if (response.ok) {
+                document.getElementById('authStatus').textContent = '✅ Valid';
+                document.getElementById('authStatus').style.color = 'green';
+            } else {
+                document.getElementById('authStatus').textContent = '❌ Invalid';
+                document.getElementById('authStatus').style.color = 'red';
+            }
+        } catch (error) {
+            log(`❌ Auth test error: ${error.message}`);
+            document.getElementById('authStatus').textContent = '❌ Error';
+            document.getElementById('authStatus').style.color = 'red';
+        }
+    }
+    
+    async function testValidation() {
+        log('=== TESTING VALIDATION ===');
+        
+        const token = currentToken || localStorage.getItem('token');
+        if (!token) {
+            log('❌ No token available');
+            document.getElementById('validationStatus').textContent = '❌ No Token';
+            document.getElementById('validationStatus').style.color = 'red';
+            return;
+        }
+        
+        const fileInput = document.getElementById('testFile');
+        if (!fileInput.files[0]) {
+            log('❌ No file selected');
+            document.getElementById('validationStatus').textContent = '❌ No File';
+            document.getElementById('validationStatus').style.color = 'red';
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('metadata', JSON.stringify({
+            maoDominante: 'Destro',
+            ladoCamera: 'Direita', 
+            ladoRaquete: 'Backhand',
+            tipoMovimento: 'Drive (Ataque)'
+        }));
+        
+        log(`Testing with file: ${fileInput.files[0].name}`);
+        log(`Using token: ${token.substring(0, 50)}...`);
+        
+        try {
+            const response = await fetch(`${API_BASE}/validate-and-get-professionals`, {
+                method: 'POST',
+                headers: { 
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+            
+            log(`Validation response status: ${response.status}`);
+            const data = await response.json();
+            log(`Validation response: ${JSON.stringify(data, null, 2)}`);
+            
+            if (response.ok) {
+                document.getElementById('validationStatus').textContent = '✅ Success';
+                document.getElementById('validationStatus').style.color = 'green';
+            } else {
+                document.getElementById('validationStatus').textContent = '❌ Failed';
+                document.getElementById('validationStatus').style.color = 'red';
+            }
+        } catch (error) {
+            log(`❌ Validation error: ${error.message}`);
+            document.getElementById('validationStatus').textContent = '❌ Error';
+            document.getElementById('validationStatus').style.color = 'red';
+        }
+    }
+    
+    // Auto-load saved token
+    window.onload = function() {
+        const savedToken = localStorage.getItem('token');
+        if (savedToken) {
+            currentToken = savedToken;
+            log(`Found saved token: ${savedToken.substring(0, 50)}...`);
+        }
+    };
+    </script>
+</body>
+</html>

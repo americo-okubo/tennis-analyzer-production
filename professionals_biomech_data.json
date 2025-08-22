@@ -1,0 +1,1082 @@
+{
+  "backhand_drive\\Fan_Zhendong_(BD)_BD_D_D.mp4": {
+    "player_name": "Fan_Zhendong_(BD)",
+    "video_file": "Fan_Zhendong_(BD)_BD_D_D.mp4",
+    "movement_type": "backhand_drive",
+    "full_movement_name": "backhand_drive",
+    "analysis_timestamp": "2025-07-28T08:27:48.028626",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "81bfbcd92b3687691b0e1978a2af7b2d",
+    "classification": {
+      "detected_movement": "backhand_drive",
+      "confidence": 0.8029883706498885,
+      "confidence_level": "medium",
+      "classification_zone": "complex",
+      "hierarchy_level": "fallback"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 87.0495907306222,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.6717765107588997,
+      "movement_signature": 0.5302675857462993,
+      "temporal_pattern": "controlled_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.20387154817581177,
+      "max_velocity": 0.33305410438784294,
+      "racket_detection_score": 0.05285616666666667,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.09222370386123657,
+      "right_arm_amplitude": 0.20387154817581177,
+      "left_max_velocity": 0.09126119067090202,
+      "right_max_velocity": 0.33305410438784294,
+      "left_coordination": 0.6700950769447055,
+      "right_coordination": 0.6717765107588997
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.25,
+      "biomech_backhand_likelihood": 0.25,
+      "biomech_drive_likelihood": 0.35,
+      "biomech_push_likelihood": 0.15000000000000002,
+      "biomech_confidence": 0.395
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "B",
+      "ladoCamera": "D",
+      "tipoMovimento": "D",
+      "movement_full_name": "backhand_drive",
+      "player_name": "Fan_Zhendong_(BD)"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.05285616666666667,
+      "biomech_confidence_quality": 0.395,
+      "overall_confidence": 0.8029883706498885
+    }
+  },
+  "backhand_drive\\Katsumi_BD_E_D.mp4": {
+    "player_name": "Katsumi",
+    "video_file": "Katsumi_BD_E_D.mp4",
+    "movement_type": "backhand_drive",
+    "full_movement_name": "backhand_drive",
+    "analysis_timestamp": "2025-07-28T08:27:55.881421",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "32ff824bfab71ee0de8c48c0f620ad92",
+    "classification": {
+      "detected_movement": "backhand_drive",
+      "confidence": 0.9061724560798059,
+      "confidence_level": "medium",
+      "classification_zone": "complex",
+      "hierarchy_level": "fallback"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 86.26734718856915,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.6469123783244737,
+      "movement_signature": 0.44404278178221884,
+      "temporal_pattern": "slow_buildup"
+    },
+    "dynamics": {
+      "amplitude_y": 0.1173757016658783,
+      "max_velocity": 0.07271151254455642,
+      "racket_detection_score": 0.9523183333333333,
+      "active_hand_side": "esquerda"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.1173757016658783,
+      "right_arm_amplitude": 0.07869437336921692,
+      "left_max_velocity": 0.07271151254455642,
+      "right_max_velocity": 0.030401087166198958,
+      "left_coordination": 0.6469123783244737,
+      "right_coordination": 0.26354716819547475
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.25,
+      "biomech_backhand_likelihood": 0.25,
+      "biomech_drive_likelihood": 0.35,
+      "biomech_push_likelihood": 0.15000000000000002,
+      "biomech_confidence": 0.395
+    },
+    "video_metadata": {
+      "maoDominante": "E",
+      "ladoRaquete": "B",
+      "ladoCamera": "D",
+      "tipoMovimento": "D",
+      "movement_full_name": "backhand_drive",
+      "player_name": "Katsumi"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.9523183333333333,
+      "biomech_confidence_quality": 0.395,
+      "overall_confidence": 0.9061724560798059
+    }
+  },
+  "backhand_push\\Meng_BP_D_D.mp4": {
+    "player_name": "Meng",
+    "video_file": "Meng_BP_D_D.mp4",
+    "movement_type": "backhand_push",
+    "full_movement_name": "backhand_push",
+    "analysis_timestamp": "2025-07-28T08:28:32.278949",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "8b2af54f3fa8f706e3cad05edbb346e1",
+    "classification": {
+      "detected_movement": "backhand_push",
+      "confidence": 0.9411449679408449,
+      "confidence_level": "medium",
+      "classification_zone": "backhand_special",
+      "hierarchy_level": "special"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 96.50408701451667,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.20374534856983845,
+      "movement_signature": 0.31961713309698325,
+      "temporal_pattern": "slow_buildup"
+    },
+    "dynamics": {
+      "amplitude_y": 0.1412135660648346,
+      "max_velocity": 0.028028160165667004,
+      "racket_detection_score": 0.8895000000000002,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.039694786071777344,
+      "right_arm_amplitude": 0.1412135660648346,
+      "left_max_velocity": 0.01134379583667024,
+      "right_max_velocity": 0.028028160165667004,
+      "left_coordination": 0.4667993726043955,
+      "right_coordination": 0.20374534856983845
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.25,
+      "biomech_backhand_likelihood": 0.2,
+      "biomech_drive_likelihood": 0.3,
+      "biomech_push_likelihood": 0.15000000000000002,
+      "biomech_confidence": 0.2979375
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "B",
+      "ladoCamera": "D",
+      "tipoMovimento": "P",
+      "movement_full_name": "backhand_push",
+      "player_name": "Meng"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.8895000000000002,
+      "biomech_confidence_quality": 0.2979375,
+      "overall_confidence": 0.9411449679408449
+    }
+  },
+  "forehand_drive\\Jin_Jeon_FD_D_D.mp4": {
+    "player_name": "Jin_Jeon",
+    "video_file": "Jin_Jeon_FD_D_D.mp4",
+    "movement_type": "forehand_drive",
+    "full_movement_name": "forehand_drive",
+    "analysis_timestamp": "2025-07-28T08:28:43.270152",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "2f9b6b3c4040be26f6e92fb887ef59d7",
+    "classification": {
+      "detected_movement": "forehand_drive",
+      "confidence": 0.98,
+      "confidence_level": "high",
+      "classification_zone": "clear",
+      "hierarchy_level": "clear"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 153.91788804307282,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.712247969622622,
+      "movement_signature": 0.6407873022989217,
+      "temporal_pattern": "controlled_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.39464743435382843,
+      "max_velocity": 0.17147028731451122,
+      "racket_detection_score": 0.7959999999999999,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.337531715631485,
+      "right_arm_amplitude": 0.39464743435382843,
+      "left_max_velocity": 0.21454510022434498,
+      "right_max_velocity": 0.17147028731451122,
+      "left_coordination": 0.5925625268710353,
+      "right_coordination": 0.712247969622622
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.15000000000000002,
+      "biomech_backhand_likelihood": 0.1,
+      "biomech_drive_likelihood": 0.1,
+      "biomech_push_likelihood": 0.15000000000000002,
+      "biomech_confidence": 0.19962500000000002
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "F",
+      "ladoCamera": "D",
+      "tipoMovimento": "D",
+      "movement_full_name": "forehand_drive",
+      "player_name": "Jin_Jeon"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.7959999999999999,
+      "biomech_confidence_quality": 0.19962500000000002,
+      "overall_confidence": 0.98
+    }
+  },
+  "forehand_drive\\Timo_Boll_FD_E_E.mp4": {
+    "player_name": "Timo_Boll",
+    "video_file": "Timo_Boll_FD_E_E.mp4",
+    "movement_type": "forehand_drive",
+    "full_movement_name": "forehand_drive",
+    "analysis_timestamp": "2025-07-29T04:22:28.429664",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "a4d260f7f67f19eb7892a7b2e6813a5b",
+    "classification": {
+      "detected_movement": "forehand_drive",
+      "confidence": 0.98,
+      "confidence_level": "high",
+      "classification_zone": "clear",
+      "hierarchy_level": "clear"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 116.63164804756508,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.660398570082996,
+      "movement_signature": 0.5913131655682043,
+      "temporal_pattern": "quick_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.4160466194152832,
+      "max_velocity": 0.36547586562809103,
+      "racket_detection_score": 0.6617626666666666,
+      "active_hand_side": "esquerda"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.4160466194152832,
+      "right_arm_amplitude": 0.24077722430229187,
+      "left_max_velocity": 0.36547586562809103,
+      "right_max_velocity": 0.12483878403799564,
+      "left_coordination": 0.660398570082996,
+      "right_coordination": 0.5843905715765991
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.25,
+      "biomech_backhand_likelihood": 0.15000000000000002,
+      "biomech_drive_likelihood": 0.25,
+      "biomech_push_likelihood": 0.15000000000000002,
+      "biomech_confidence": 0.2985
+    },
+    "video_metadata": {
+      "maoDominante": "E",
+      "ladoRaquete": "F",
+      "ladoCamera": "E",
+      "tipoMovimento": "D",
+      "movement_full_name": "forehand_drive",
+      "player_name": "Timo_Boll"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.6617626666666666,
+      "biomech_confidence_quality": 0.2985,
+      "overall_confidence": 0.98
+    }
+  },
+  "forehand_drive\\Zhang_Jike_FD_D_D.mp4": {
+    "player_name": "Zhang_Jike",
+    "video_file": "Zhang_Jike_FD_D_D.mp4",
+    "movement_type": "forehand_drive",
+    "full_movement_name": "forehand_drive",
+    "analysis_timestamp": "2025-07-28T08:29:08.394310",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "6d3689b03f03696e7d09c85a0f72f22e",
+    "classification": {
+      "detected_movement": "forehand_drive",
+      "confidence": 0.98,
+      "confidence_level": "high",
+      "classification_zone": "clear",
+      "hierarchy_level": "clear"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 145.50612455584437,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.7178607674754148,
+      "movement_signature": 0.6099353373926321,
+      "temporal_pattern": "slow_buildup"
+    },
+    "dynamics": {
+      "amplitude_y": 0.33646951615810394,
+      "max_velocity": 0.22765345568869813,
+      "racket_detection_score": 0.9432316666666668,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.2610335201025009,
+      "right_arm_amplitude": 0.33646951615810394,
+      "left_max_velocity": 0.16662018717168223,
+      "right_max_velocity": 0.22765345568869813,
+      "left_coordination": 0.5743123974267289,
+      "right_coordination": 0.7178607674754148
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.15000000000000002,
+      "biomech_backhand_likelihood": 0.1,
+      "biomech_drive_likelihood": 0.1,
+      "biomech_push_likelihood": 0.15000000000000002,
+      "biomech_confidence": 0.19962500000000002
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "F",
+      "ladoCamera": "D",
+      "tipoMovimento": "D",
+      "movement_full_name": "forehand_drive",
+      "player_name": "Zhang_Jike"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.9432316666666668,
+      "biomech_confidence_quality": 0.19962500000000002,
+      "overall_confidence": 0.98
+    }
+  },
+  "forehand_push\\Maharu_FP_D_E.mp4": {
+    "player_name": "Maharu",
+    "video_file": "Maharu_FP_D_E.mp4",
+    "movement_type": "forehand_push",
+    "full_movement_name": "forehand_push",
+    "analysis_timestamp": "2025-07-28T08:29:50.020426",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "43852de0d45841d36d6738b124b18bfe",
+    "classification": {
+      "detected_movement": "forehand_push",
+      "confidence": 0.8283559040669518,
+      "confidence_level": "medium",
+      "classification_zone": "complex",
+      "hierarchy_level": "fallback"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 82.77068250197799,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.8338092677450374,
+      "movement_signature": 0.5384585155939194,
+      "temporal_pattern": "quick_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.08738958835601807,
+      "max_velocity": 0.04921997585583133,
+      "racket_detection_score": 0.9802500000000001,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.12887904047966003,
+      "right_arm_amplitude": 0.08738958835601807,
+      "left_max_velocity": 0.024025317491594422,
+      "right_max_velocity": 0.04921997585583133,
+      "left_coordination": 0.787955365841014,
+      "right_coordination": 0.8338092677450374
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.35000000000000003,
+      "biomech_backhand_likelihood": 0.35000000000000003,
+      "biomech_drive_likelihood": 0.4,
+      "biomech_push_likelihood": 0.30000000000000004,
+      "biomech_confidence": 0.399
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "F",
+      "ladoCamera": "E",
+      "tipoMovimento": "P",
+      "movement_full_name": "forehand_push",
+      "player_name": "Maharu"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.9802500000000001,
+      "biomech_confidence_quality": 0.399,
+      "overall_confidence": 0.8283559040669518
+    }
+  },
+  "backhand_drive\\\\Chen_Meng_BD_D_D.mp4": {
+    "player_name": "Chen_Meng",
+    "video_file": "Chen_Meng_BD_D_D.mp4",
+    "movement_type": "backhand_drive",
+    "full_movement_name": "backhand_drive",
+    "analysis_timestamp": "2025-08-08T22:10:30.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "72d36596a0a6f20a34a939df9b27bf62",
+    "classification": {
+      "detected_movement": "backhand_drive",
+      "confidence": 0.98,
+      "confidence_level": "high",
+      "classification_zone": "clear",
+      "hierarchy_level": "clear"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 131.7,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.61,
+      "movement_signature": 0.583,
+      "temporal_pattern": "controlled_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.3019,
+      "max_velocity": 0.1313,
+      "racket_detection_score": 0.925,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.1710,
+      "right_arm_amplitude": 0.3019,
+      "left_max_velocity": 0.0770,
+      "right_max_velocity": 0.1313,
+      "left_coordination": 0.51,
+      "right_coordination": 0.61
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.1,
+      "biomech_backhand_likelihood": 0.5,
+      "biomech_drive_likelihood": 0.6,
+      "biomech_push_likelihood": 0.2,
+      "biomech_confidence": 0.5
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "B",
+      "ladoCamera": "D",
+      "tipoMovimento": "D",
+      "movement_full_name": "backhand_drive",
+      "player_name": "Chen_Meng"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.85,
+      "biomech_confidence_quality": 0.5,
+      "overall_confidence": 0.95
+    }
+  },
+  "backhand_drive\\\\Ovtcharov_BD_D_E.mp4": {
+    "player_name": "Ovtcharov",
+    "video_file": "Ovtcharov_BD_D_E.mp4",
+    "movement_type": "backhand_drive",
+    "full_movement_name": "backhand_drive",
+    "analysis_timestamp": "2025-08-09T16:01:15.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "c4a1a9daa4a12c8d649f081e76199c74",
+    "classification": {
+      "detected_movement": "backhand_drive",
+      "confidence": 0.98,
+      "confidence_level": "high",
+      "classification_zone": "critical_biomech",
+      "hierarchy_level": "specific"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 156.8,
+      "elbow_opening_trend": "controlled",
+      "coordination_score": 0.57,
+      "movement_signature": 0.638,
+      "temporal_pattern": "quick_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.0689,
+      "max_velocity": 0.0422,
+      "racket_detection_score": 0.892,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.1028,
+      "right_arm_amplitude": 0.0689,
+      "left_max_velocity": 0.0320,
+      "right_max_velocity": 0.0422,
+      "left_coordination": 0.71,
+      "right_coordination": 0.57
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.05,
+      "biomech_backhand_likelihood": 0.10,
+      "biomech_drive_likelihood": 0.00,
+      "biomech_push_likelihood": 0.15,
+      "biomech_confidence": 0.20
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "B",
+      "ladoCamera": "E",
+      "tipoMovimento": "D",
+      "movement_full_name": "backhand_drive",
+      "player_name": "Ovtcharov"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.892,
+      "biomech_confidence_quality": 0.20,
+      "overall_confidence": 0.98
+    }
+  },
+  "backhand_push\\\\Zhao_Yiyi_(BP)_BP_D_E.mp4": {
+    "player_name": "Zhao_Yiyi_(BP)",
+    "video_file": "Zhao_Yiyi_(BP)_BP_D_E.mp4",
+    "movement_type": "backhand_push",
+    "full_movement_name": "backhand_push",
+    "analysis_timestamp": "2025-08-09T16:03:15.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "95314d10ca14589be1529831e6b159bb",
+    "classification": {
+      "detected_movement": "backhand_push",
+      "confidence": 0.845,
+      "confidence_level": "medium",
+      "classification_zone": "complex",
+      "hierarchy_level": "fallback"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 118.8,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.45,
+      "movement_signature": 0.525,
+      "temporal_pattern": "controlled_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.1892,
+      "max_velocity": 0.0876,
+      "racket_detection_score": 0.683,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.0733,
+      "right_arm_amplitude": 0.1892,
+      "left_max_velocity": 0.0194,
+      "right_max_velocity": 0.0876,
+      "left_coordination": 0.63,
+      "right_coordination": 0.45
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.25,
+      "biomech_backhand_likelihood": 0.10,
+      "biomech_drive_likelihood": 0.25,
+      "biomech_push_likelihood": 0.10,
+      "biomech_confidence": 0.25
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "B",
+      "ladoCamera": "E",
+      "tipoMovimento": "P",
+      "movement_full_name": "backhand_push",
+      "player_name": "Zhao_Yiyi_(BP)"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.683,
+      "biomech_confidence_quality": 0.25,
+      "overall_confidence": 0.845
+    }
+  },
+  "backhand_push\\\\Alois_Rosario_BP_E_E.mp4": {
+    "player_name": "Alois_Rosario",
+    "video_file": "Alois_Rosario_BP_E_E.mp4",
+    "movement_type": "backhand_push",
+    "full_movement_name": "backhand_push",
+    "analysis_timestamp": "2025-08-09T16:07:15.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "796fec2d49432637b6655cdc36bba976",
+    "classification": {
+      "detected_movement": "backhand_push",
+      "confidence": 0.82,
+      "confidence_level": "medium",
+      "classification_zone": "complex",
+      "hierarchy_level": "fallback"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 89.0,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.30,
+      "movement_signature": 0.357,
+      "temporal_pattern": "slow_buildup"
+    },
+    "dynamics": {
+      "amplitude_y": 0.0591,
+      "max_velocity": 0.0536,
+      "racket_detection_score": 0.626,
+      "active_hand_side": "esquerda"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.0591,
+      "right_arm_amplitude": 0.0544,
+      "left_max_velocity": 0.0536,
+      "right_max_velocity": 0.0297,
+      "left_coordination": 0.30,
+      "right_coordination": 0.77
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.25,
+      "biomech_backhand_likelihood": 0.20,
+      "biomech_drive_likelihood": 0.20,
+      "biomech_push_likelihood": 0.15,
+      "biomech_confidence": 0.30
+    },
+    "video_metadata": {
+      "maoDominante": "E",
+      "ladoRaquete": "B",
+      "ladoCamera": "E",
+      "tipoMovimento": "P",
+      "movement_full_name": "backhand_push",
+      "player_name": "Alois_Rosario"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.626,
+      "biomech_confidence_quality": 0.30,
+      "overall_confidence": 0.82
+    }
+  },
+  "forehand_drive\\\\Calderano_FD_D_D.mp4": {
+    "player_name": "Calderano",
+    "video_file": "Calderano_FD_D_D.mp4",
+    "movement_type": "forehand_drive",
+    "full_movement_name": "forehand_drive",
+    "analysis_timestamp": "2025-08-08T22:07:50.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "f34b5c50c0ffd24dcde6fd9c90403302",
+    "classification": {
+      "detected_movement": "forehand_drive",
+      "confidence": 0.98,
+      "confidence_level": "high",
+      "classification_zone": "clear",
+      "hierarchy_level": "clear"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 179.1,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.86,
+      "movement_signature": 0.714,
+      "temporal_pattern": "controlled_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.2761,
+      "max_velocity": 0.4343,
+      "racket_detection_score": 0.838,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.1392,
+      "right_arm_amplitude": 0.2761,
+      "left_max_velocity": 0.2345,
+      "right_max_velocity": 0.4343,
+      "left_coordination": 0.79,
+      "right_coordination": 0.86
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.20,
+      "biomech_backhand_likelihood": 0.15,
+      "biomech_drive_likelihood": 0.10,
+      "biomech_push_likelihood": 0.25,
+      "biomech_confidence": 0.30
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "F",
+      "ladoCamera": "D",
+      "tipoMovimento": "D",
+      "movement_full_name": "forehand_drive",
+      "player_name": "Calderano"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.838,
+      "biomech_confidence_quality": 0.30,
+      "overall_confidence": 0.98
+    }
+  },
+  "forehand_drive\\\\Eli_Baraty_FD_E_D.mp4": {
+    "player_name": "Eli_Baraty",
+    "video_file": "Eli_Baraty_FD_E_D.mp4",
+    "movement_type": "forehand_drive",
+    "full_movement_name": "forehand_drive",
+    "analysis_timestamp": "2025-08-09T15:50:00.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "5ec0da78f272b2376c08f1377aef27d2",
+    "classification": {
+      "detected_movement": "forehand_drive",
+      "confidence": 0.876,
+      "confidence_level": "medium",
+      "classification_zone": "complex",
+      "hierarchy_level": "fallback"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 83.2,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.73,
+      "movement_signature": 0.488,
+      "temporal_pattern": "quick_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.1770,
+      "max_velocity": 0.0406,
+      "racket_detection_score": 0.956,
+      "active_hand_side": "esquerda"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.1770,
+      "right_arm_amplitude": 0.0509,
+      "left_max_velocity": 0.0406,
+      "right_max_velocity": 0.0191,
+      "left_coordination": 0.73,
+      "right_coordination": 0.57
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.30,
+      "biomech_backhand_likelihood": 0.30,
+      "biomech_drive_likelihood": 0.25,
+      "biomech_push_likelihood": 0.10,
+      "biomech_confidence": 0.3
+    },
+    "video_metadata": {
+      "maoDominante": "E",
+      "ladoRaquete": "F",
+      "ladoCamera": "D",
+      "tipoMovimento": "D",
+      "movement_full_name": "forehand_drive",
+      "player_name": "Eli_Baraty"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.956,
+      "biomech_confidence_quality": 0.3,
+      "overall_confidence": 0.876
+    }
+  },
+  "forehand_drive\\\\Fan_Zhendong_(FD)_FD_D_E.mp4": {
+    "player_name": "Fan_Zhendong_(FD)",
+    "video_file": "Fan_Zhendong_(FD)_FD_D_E.mp4",
+    "movement_type": "forehand_drive",
+    "full_movement_name": "forehand_drive",
+    "analysis_timestamp": "2025-08-09T15:52:30.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "f2984d811a636c39b56f9a374647eaa4",
+    "classification": {
+      "detected_movement": "forehand_drive",
+      "confidence": 0.98,
+      "confidence_level": "high",
+      "classification_zone": "clear",
+      "hierarchy_level": "clear"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 177.8,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.57,
+      "movement_signature": 0.681,
+      "temporal_pattern": "progressive_drive"
+    },
+    "dynamics": {
+      "amplitude_y": 0.3496,
+      "max_velocity": 0.4415,
+      "racket_detection_score": 0.845,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.1352,
+      "right_arm_amplitude": 0.3496,
+      "left_max_velocity": 0.0695,
+      "right_max_velocity": 0.4415,
+      "left_coordination": 0.62,
+      "right_coordination": 0.57
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.10,
+      "biomech_backhand_likelihood": 0.05,
+      "biomech_drive_likelihood": 0.00,
+      "biomech_push_likelihood": 0.15,
+      "biomech_confidence": 0.20
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "F",
+      "ladoCamera": "E",
+      "tipoMovimento": "D",
+      "movement_full_name": "forehand_drive",
+      "player_name": "Fan_Zhendong_(FD)"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.845,
+      "biomech_confidence_quality": 0.20,
+      "overall_confidence": 0.98
+    }
+  },
+  "forehand_drive\\\\Ma_Long_FD_D_D.mp4": {
+    "player_name": "Ma_Long",
+    "video_file": "Ma_Long_FD_D_D.mp4",
+    "movement_type": "forehand_drive",
+    "full_movement_name": "forehand_drive",
+    "analysis_timestamp": "2025-08-09T15:59:30.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "ef02a794dfbff41f43b08cc6fbb22c9f",
+    "classification": {
+      "detected_movement": "forehand_drive",
+      "confidence": 0.98,
+      "confidence_level": "high",
+      "classification_zone": "clear",
+      "hierarchy_level": "clear"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 178.5,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.63,
+      "movement_signature": 0.676,
+      "temporal_pattern": "quick_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.4344,
+      "max_velocity": 0.2363,
+      "racket_detection_score": 0.873,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.3006,
+      "right_arm_amplitude": 0.4344,
+      "left_max_velocity": 0.1252,
+      "right_max_velocity": 0.2363,
+      "left_coordination": 0.79,
+      "right_coordination": 0.63
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.10,
+      "biomech_backhand_likelihood": 0.10,
+      "biomech_drive_likelihood": 0.05,
+      "biomech_push_likelihood": 0.15,
+      "biomech_confidence": 0.20
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "F",
+      "ladoCamera": "D",
+      "tipoMovimento": "D",
+      "movement_full_name": "forehand_drive",
+      "player_name": "Ma_Long"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.873,
+      "biomech_confidence_quality": 0.20,
+      "overall_confidence": 0.98
+    }
+  },
+  "forehand_drive\\\\Liam_Pitchford_FD_D_E.mp4": {
+    "player_name": "Liam_Pitchford",
+    "video_file": "Liam_Pitchford_FD_D_E.mp4",
+    "movement_type": "forehand_drive",
+    "full_movement_name": "forehand_drive",
+    "analysis_timestamp": "2025-08-09T15:56:00.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "84948dcc20c73dce60fdfe52da142328",
+    "classification": {
+      "detected_movement": "forehand_drive",
+      "confidence": 0.98,
+      "confidence_level": "high",
+      "classification_zone": "clear",
+      "hierarchy_level": "clear"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 170.8,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.63,
+      "movement_signature": 0.648,
+      "temporal_pattern": "controlled_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.3440,
+      "max_velocity": 0.1289,
+      "racket_detection_score": 0.951,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.1852,
+      "right_arm_amplitude": 0.3440,
+      "left_max_velocity": 0.1116,
+      "right_max_velocity": 0.1289,
+      "left_coordination": 0.72,
+      "right_coordination": 0.63
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.10,
+      "biomech_backhand_likelihood": 0.10,
+      "biomech_drive_likelihood": 0.05,
+      "biomech_push_likelihood": 0.15,
+      "biomech_confidence": 0.20
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "F",
+      "ladoCamera": "E",
+      "tipoMovimento": "D",
+      "movement_full_name": "forehand_drive",
+      "player_name": "Liam_Pitchford"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.951,
+      "biomech_confidence_quality": 0.20,
+      "overall_confidence": 0.98
+    }
+  },
+  "forehand_push\\\\Jeff_Plumb_FP_D_D.mp4": {
+    "player_name": "Jeff_Plumb",
+    "video_file": "Jeff_Plumb_FP_D_D.mp4",
+    "movement_type": "forehand_push",
+    "full_movement_name": "forehand_push",
+    "analysis_timestamp": "2025-08-09T15:54:15.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "dcf4fc7f4379bf91011c73c6255a0ed7",
+    "classification": {
+      "detected_movement": "forehand_push",
+      "confidence": 0.818,
+      "confidence_level": "medium",
+      "classification_zone": "complex",
+      "hierarchy_level": "fallback"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 94.3,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.41,
+      "movement_signature": 0.408,
+      "temporal_pattern": "quick_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.0858,
+      "max_velocity": 0.0573,
+      "racket_detection_score": 0.850,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.0382,
+      "right_arm_amplitude": 0.0858,
+      "left_max_velocity": 0.0154,
+      "right_max_velocity": 0.0573,
+      "left_coordination": 0.59,
+      "right_coordination": 0.41
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.25,
+      "biomech_backhand_likelihood": 0.20,
+      "biomech_drive_likelihood": 0.15,
+      "biomech_push_likelihood": 0.05,
+      "biomech_confidence": 0.30
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "F",
+      "ladoCamera": "D",
+      "tipoMovimento": "P",
+      "movement_full_name": "forehand_push",
+      "player_name": "Jeff_Plumb"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.850,
+      "biomech_confidence_quality": 0.30,
+      "overall_confidence": 0.818
+    }
+  },
+  "forehand_push\\\\Zhao_Yiyi_(FP)_FP_D_D.mp4": {
+    "player_name": "Zhao_Yiyi_(FP)",
+    "video_file": "Zhao_Yiyi_(FP)_FP_D_D.mp4",
+    "movement_type": "forehand_push",
+    "full_movement_name": "forehand_push",
+    "analysis_timestamp": "2025-08-09T16:05:15.000000",
+    "analyzer_version": "5.0_real_biomech_cycle_specific",
+    "file_hash": "e0bcbcf650b846d91dd917a1d1b6dc22",
+    "classification": {
+      "detected_movement": "forehand_push",
+      "confidence": 0.842,
+      "confidence_level": "medium",
+      "classification_zone": "complex",
+      "hierarchy_level": "fallback"
+    },
+    "biomechanics": {
+      "elbow_variation_degrees": 127.0,
+      "elbow_opening_trend": "stable",
+      "coordination_score": 0.46,
+      "movement_signature": 0.560,
+      "temporal_pattern": "quick_push"
+    },
+    "dynamics": {
+      "amplitude_y": 0.1727,
+      "max_velocity": 0.0743,
+      "racket_detection_score": 0.898,
+      "active_hand_side": "direita"
+    },
+    "bilateral_analysis": {
+      "left_arm_amplitude": 0.0864,
+      "right_arm_amplitude": 0.1727,
+      "left_max_velocity": 0.0453,
+      "right_max_velocity": 0.0743,
+      "left_coordination": 0.73,
+      "right_coordination": 0.46
+    },
+    "confidence_breakdown": {
+      "biomech_forehand_likelihood": 0.15,
+      "biomech_backhand_likelihood": 0.10,
+      "biomech_drive_likelihood": 0.20,
+      "biomech_push_likelihood": 0.30,
+      "biomech_confidence": 0.25
+    },
+    "video_metadata": {
+      "maoDominante": "D",
+      "ladoRaquete": "F",
+      "ladoCamera": "D",
+      "tipoMovimento": "P",
+      "movement_full_name": "forehand_push",
+      "player_name": "Zhao_Yiyi_(FP)"
+    },
+    "cycle_analysis": null,
+    "quality_metrics": {
+      "analysis_success": true,
+      "has_cycle_data": false,
+      "racket_detection_quality": 0.898,
+      "biomech_confidence_quality": 0.25,
+      "overall_confidence": 0.842
+    }
+  }
+}

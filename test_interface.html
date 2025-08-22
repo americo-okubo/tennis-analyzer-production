@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tennis Analyzer - Teste Simples</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .btn {
+            background: linear-gradient(135deg, #4a7c59 0%, #2c5530 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(76, 124, 89, 0.3);
+        }
+        .btn:hover { opacity: 0.9; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
+        .form-group select, .form-group input { 
+            padding: 12px; 
+            border: 2px solid #4a7c59; 
+            border-radius: 8px; 
+            width: 300px; 
+            font-size: 16px; 
+        }
+        .biomech-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%);
+            border-radius: 15px;
+            border: 2px solid #4a7c59;
+        }
+    </style>
+</head>
+<body>
+    <header style="background: #4a7c59; color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+        <h1>🎾 Tennis Analyzer - Teste Simples</h1>
+        <p>Análise Biomecânica Direta</p>
+    </header>
+
+    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h2>📹 Upload do Vídeo</h2>
+        <input type="file" id="user-video" accept="video/*" style="width: 100%; padding: 10px; border: 2px dashed #ccc; border-radius: 5px; margin-bottom: 20px;">
+        
+        <h2>⚙️ Configuração</h2>
+        <div class="form-group">
+            <label>Mão Dominante:</label>
+            <select id="maoDominante">
+                <option value="Destro">Destro</option>
+                <option value="Canhoto">Canhoto</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Lado da Câmera:</label>
+            <select id="ladoCamera">
+                <option value="Direita">Direita</option>
+                <option value="Esquerda">Esquerda</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Lado da Raquete:</label>
+            <select id="ladoRaquete">
+                <option value="F">Forehand</option>
+                <option value="B">Backhand</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Tipo de Movimento:</label>
+            <select id="tipoMovimento">
+                <option value="D">Drive (Ataque)</option>
+                <option value="P">Push (Defesa)</option>
+            </select>
+        </div>
+
+        <div class="biomech-section">
+            <h3 style="color: #2c5530; margin-bottom: 15px;">
+                🧬 Análise Biomecânica Avançada
+            </h3>
+            <p style="margin-bottom: 20px; color: #666; font-size: 16px;">
+                Análise detalhada de movimento com comparação profissional automática
+            </p>
+            
+            <div style="margin-bottom: 20px;">
+                <label for="cycleIndex" style="display: block; margin-bottom: 8px; font-weight: bold; color: #2c5530;">
+                    Ciclo para análise:
+                </label>
+                <select id="cycleIndex" style="padding: 12px; border: 2px solid #4a7c59; border-radius: 8px; width: 150px; font-size: 16px;">
+                    <option value="0">1º ciclo</option>
+                    <option value="1" selected>2º ciclo (recomendado)</option>
+                    <option value="2">3º ciclo</option>
+                    <option value="3">4º ciclo</option>
+                </select>
+                <small style="display: block; margin-top: 5px; color: #666;">
+                    O 2º ciclo geralmente oferece os melhores resultados
+                </small>
+            </div>
+            
+            <button class="btn" onclick="analyzeEnhancedCycle()" id="enhancedAnalyzeBtn">
+                ⚡ INICIAR ANÁLISE BIOMECÂNICA
+            </button>
+        </div>
+
+        <div id="results" style="margin-top: 30px;"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+
+        async function analyzeEnhancedCycle() {
+            console.log("🔥 INICIANDO ANÁLISE BIOMECÂNICA");
+            
+            const fileInput = document.getElementById('user-video');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert("Por favor, selecione um vídeo primeiro!");
+                return;
+            }
+            
+            const button = document.getElementById('enhancedAnalyzeBtn');
+            button.disabled = true;
+            button.textContent = 'ANALISANDO...';
+            button.style.background = '#ccc';
+            
+            try {
+                const metadata = {
+                    maoDominante: document.getElementById('maoDominante').value,
+                    ladoCamera: document.getElementById('ladoCamera').value,
+                    ladoRaquete: document.getElementById('ladoRaquete').value,
+                    tipoMovimento: document.getElementById('tipoMovimento').value
+                };
+                
+                const cycleIndex = document.getElementById('cycleIndex').value;
+                
+                console.log("Enviando dados:", metadata, "Ciclo:", cycleIndex);
+                
+                const formData = new FormData();
+                formData.append('user_video', file);
+                formData.append('metadata', JSON.stringify(metadata));
+                formData.append('cycle_index', cycleIndex);
+                
+                const response = await fetch(`${API_BASE}/analyze`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                console.log("Resultado:", result);
+                
+                if (response.ok && result.success) {
+                    displayResults(result);
+                } else {
+                    alert(`Erro: ${result.detail || result.error || 'Erro desconhecido'}`);
+                }
+                
+            } catch (error) {
+                console.error("Erro:", error);
+                alert(`Erro de comunicação: ${error.message}`);
+            } finally {
+                button.disabled = false;
+                button.textContent = '⚡ INICIAR ANÁLISE BIOMECÂNICA';
+                button.style.background = 'linear-gradient(135deg, #4a7c59 0%, #2c5530 100%)';
+            }
+        }
+        
+        function displayResults(result) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div style="background: #f0f8f0; padding: 20px; border-radius: 10px; border: 2px solid #4CAF50;">
+                    <h3>✅ Resultado da Análise Biomecânica</h3>
+                    <p><strong>Score Final:</strong> ${result.final_score ? result.final_score.toFixed(1) + '%' : 'N/A'}</p>
+                    <p><strong>Tipo:</strong> ${result.analysis_type || 'Biomecânica'}</p>
+                    <p><strong>Data:</strong> ${new Date().toLocaleString()}</p>
+                    ${result.professional_comparisons ? 
+                        '<h4>Comparações Profissionais:</h4><ul>' + 
+                        result.professional_comparisons.slice(0,3).map(comp => 
+                            `<li>${comp.professional_name}: ${comp.similarity_percentage}</li>`
+                        ).join('') + '</ul>' : ''
+                    }
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

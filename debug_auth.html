@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Auth Test</title>
+</head>
+<body>
+    <h2>Auth Debug Test</h2>
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="testProfessionals()">Test Professionals</button>
+    <div id="result"></div>
+
+    <script>
+    const API_BASE = 'http://localhost:8003';
+    let authToken = null;
+
+    async function testLogin() {
+        console.log("Testing login...");
+        
+        try {
+            const response = await fetch(`${API_BASE}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: "demo", password: "demo123" })
+            });
+            
+            console.log("Login response status:", response.status);
+            const data = await response.json();
+            console.log("Login response data:", data);
+            
+            if (data.access_token) {
+                authToken = data.access_token;
+                localStorage.setItem('token', authToken);
+                document.getElementById('result').innerHTML = `<div style="color: green;">Login Success! Token: ${authToken.substring(0, 50)}...</div>`;
+            } else {
+                document.getElementById('result').innerHTML = `<div style="color: red;">Login Failed: ${JSON.stringify(data)}</div>`;
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            document.getElementById('result').innerHTML = `<div style="color: red;">Login Error: ${error.message}</div>`;
+        }
+    }
+
+    async function testProfessionals() {
+        console.log("Testing professionals...");
+        
+        const token = authToken || localStorage.getItem('token');
+        console.log("Using token:", token ? token.substring(0, 50) + "..." : "NO TOKEN");
+        
+        if (!token) {
+            document.getElementById('result').innerHTML = `<div style="color: red;">No token! Please login first.</div>`;
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${API_BASE}/professionals?movement_type=forehand_drive`, {
+                method: 'GET',
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            console.log("Professionals response status:", response.status);
+            const data = await response.json();
+            console.log("Professionals response data:", data);
+            
+            if (response.ok) {
+                document.getElementById('result').innerHTML = `<div style="color: green;">Professionals Success: ${data.count} found</div>`;
+            } else {
+                document.getElementById('result').innerHTML = `<div style="color: red;">Professionals Failed: ${JSON.stringify(data)}</div>`;
+            }
+        } catch (error) {
+            console.error("Professionals error:", error);
+            document.getElementById('result').innerHTML = `<div style="color: red;">Professionals Error: ${error.message}</div>`;
+        }
+    }
+
+    // Auto-load token on page load
+    window.onload = function() {
+        const savedToken = localStorage.getItem('token');
+        if (savedToken) {
+            authToken = savedToken;
+            console.log("Found saved token:", savedToken.substring(0, 50) + "...");
+        }
+    };
+    </script>
+</body>
+</html>

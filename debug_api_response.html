@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug API Response</title>
+</head>
+<body>
+    <h1>Debug API Response</h1>
+    <button onclick="testAPI()">Test API</button>
+    <pre id="output"></pre>
+
+    <script>
+        async function testAPI() {
+            const output = document.getElementById('output');
+            output.textContent = 'Testing API...\n';
+            
+            try {
+                const formData = new FormData();
+                formData.append('selected_video', 'Japones_BP_D_D.mp4');
+                formData.append('metadata', JSON.stringify({
+                    'maoDominante': 'Destro',
+                    'ladoCamera': 'Direita', 
+                    'ladoRaquete': 'B',
+                    'tipoMovimento': 'P'
+                }));
+                formData.append('cycle_index', 1);
+                
+                const response = await fetch('http://localhost:8000/analyze-selected-DEBUG-FIXED-v16', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    
+                    output.textContent += 'API Response received!\n';
+                    output.textContent += 'Response keys: ' + Object.keys(result).join(', ') + '\n\n';
+                    
+                    output.textContent += 'Success: ' + result.success + '\n';
+                    output.textContent += 'Final Score: ' + result.final_score + '\n';
+                    output.textContent += 'Movement: ' + result.detected_movement + '\n\n';
+                    
+                    output.textContent += 'Recommendations:\n';
+                    output.textContent += 'Type: ' + typeof result.recommendations + '\n';
+                    output.textContent += 'Length: ' + (result.recommendations ? result.recommendations.length : 'N/A') + '\n';
+                    
+                    if (result.recommendations && result.recommendations.length > 0) {
+                        output.textContent += 'Items:\n';
+                        result.recommendations.forEach((rec, i) => {
+                            output.textContent += '  ' + (i+1) + '. ' + rec + '\n';
+                        });
+                    } else {
+                        output.textContent += 'NO RECOMMENDATIONS FOUND!\n';
+                    }
+                    
+                    output.textContent += '\n--- FULL JSON ---\n';
+                    output.textContent += JSON.stringify(result, null, 2);
+                    
+                } else {
+                    output.textContent += 'API Error: ' + response.status + '\n';
+                    output.textContent += await response.text();
+                }
+                
+            } catch (error) {
+                output.textContent += 'Exception: ' + error + '\n';
+            }
+        }
+    </script>
+</body>
+</html>

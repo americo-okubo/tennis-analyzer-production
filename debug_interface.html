@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Interface - Recommendations Test</title>
+</head>
+<body>
+    <h1>Debug Interface - Recommendations Test</h1>
+    <button onclick="testRecommendations()">Test Recommendations</button>
+    <pre id="output"></pre>
+
+    <script>
+        async function testRecommendations() {
+            const output = document.getElementById('output');
+            output.textContent = 'Testing...\n';
+            
+            const API_BASE = 'http://localhost:8000';
+            const url = `${API_BASE}/analyze-selected-DEBUG-FIXED-v16`;
+            
+            const formData = new FormData();
+            formData.append('selected_video', 'Japones_BP_D_D.mp4');
+            formData.append('metadata', JSON.stringify({
+                'maoDominante': 'D',
+                'ladoCamera': 'D', 
+                'ladoRaquete': 'B',
+                'tipoMovimento': 'P'
+            }));
+            formData.append('cycle_index', 1);
+            
+            try {
+                output.textContent += `Calling: ${url}\n`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                output.textContent += `Response Status: ${response.status}\n`;
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    
+                    output.textContent += `\nResult Keys: ${Object.keys(result).join(', ')}\n`;
+                    output.textContent += `Success: ${result.success}\n`;
+                    output.textContent += `Score: ${result.final_score}\n`;
+                    
+                    const recommendations = result.recommendations || [];
+                    output.textContent += `\nRecommendations (${recommendations.length} items):\n`;
+                    recommendations.forEach((rec, i) => {
+                        output.textContent += `  ${i+1}. ${rec}\n`;
+                    });
+                    
+                    const profComps = result.professional_comparisons || [];
+                    output.textContent += `\nProfessional Comparisons (${profComps.length} items):\n`;
+                    profComps.forEach((comp, i) => {
+                        if (typeof comp === 'object') {
+                            output.textContent += `  ${i+1}. ${comp.professional_name} - Score: ${comp.similarity_score}%\n`;
+                        } else {
+                            output.textContent += `  ${i+1}. ${comp}\n`;
+                        }
+                    });
+                    
+                } else {
+                    output.textContent += `Error: ${await response.text()}\n`;
+                }
+                
+            } catch (error) {
+                output.textContent += `Exception: ${error}\n`;
+            }
+        }
+    </script>
+</body>
+</html>

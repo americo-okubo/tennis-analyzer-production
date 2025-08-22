@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test CORS</title>
+</head>
+<body>
+    <h1>Teste de Conectividade</h1>
+    <button onclick="testAPI()">Testar API</button>
+    <div id="result"></div>
+
+    <script>
+    async function testAPI() {
+        const resultDiv = document.getElementById('result');
+        
+        try {
+            console.log('Testando login...');
+            const loginResponse = await fetch('http://localhost:8001/auth/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({})
+            });
+            
+            const loginData = await loginResponse.json();
+            console.log('Login success:', loginData);
+            
+            resultDiv.innerHTML = `
+                <p>✅ API está funcionando!</p>
+                <p>Login: ${loginResponse.status}</p>
+                <p>Token: ${loginData.access_token}</p>
+            `;
+            
+        } catch (error) {
+            console.error('Erro:', error);
+            resultDiv.innerHTML = `
+                <p>❌ Erro na conexão:</p>
+                <p>${error.message}</p>
+            `;
+        }
+    }
+    </script>
+</body>
+</html>

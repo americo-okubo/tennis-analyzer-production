@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tennis Analyzer - Sistema Biomecânico</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 10px; /* Reduzido para mobile */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            /* Mobile-first: texto legível */
+            font-size: 16px; /* Mínimo para mobile */
+            line-height: 1.4;
+        }
+        
+        /* Media query para desktop */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+                font-size: 14px;
+            }
+        }
+        .btn {
+            background: linear-gradient(135deg, #4a7c59 0%, #2c5530 100%);
+            color: white;
+            border: none;
+            /* Mobile-first: botões touch-friendly */
+            padding: 16px 24px; /* Mínimo 44px altura */
+            font-size: 18px;
+            min-height: 44px; /* Apple guidelines para toque */
+            width: 100%; /* Full width no mobile */
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(76, 124, 89, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        /* Botões no desktop: tamanho original */
+        @media (min-width: 768px) {
+            .btn {
+                width: auto; /* Não full width no desktop */
+                display: inline-block;
+                margin-right: 10px;
+                padding: 15px 30px;
+            }
+        }
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 124, 89, 0.4);
+        }
+        .btn:disabled {
+            background: #ccc !important;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold; 
+            color: #2c5530;
+        }
+        .form-group select, .form-group input { 
+            padding: 12px; 
+            border: 2px solid #4a7c59; 
+            border-radius: 8px; 
+            width: 300px; 
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: #2c5530;
+            box-shadow: 0 0 0 3px rgba(76, 124, 89, 0.1);
+        }
+        .biomech-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%);
+            border-radius: 15px;
+            border: 2px solid #4a7c59;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .results-container {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #4a7c59;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a7c59;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .professional-comparison {
+            background: #f0f8ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        /* Estilos para tabela comparativa */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th {
+            padding: 10px;
+            background: linear-gradient(135deg, #4a7c59 0%, #2c5530 100%);
+            color: white;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .comparison-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 11px;
+        }
+        
+        .similarity-bar {
+            background: #e0e0e0;
+            height: 6px;
+            width: 50px;
+            border-radius: 3px;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .similarity-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+        
+        /* Responsividade para tabela comparativa */
+        @media (max-width: 768px) {
+            .comparison-table {
+                font-size: 10px;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 6px 4px;
+            }
+            
+            .comparison-table th {
+                font-size: 9px;
+            }
+            
+            .similarity-bar {
+                width: 30px;
+                height: 4px;
+            }
+        }
+        .score-display {
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 5px auto;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <header style="background: linear-gradient(135deg, #4a7c59 0%, #2c5530 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <h1 style="margin: 0; font-size: 2.5em;">🏓 Tennis Analyzer</h1>
+        <p style="margin: 10px 0 0 0; font-size: 1.2em; opacity: 0.9;">Sistema de Análise Biomecânica para Tênis de Mesa</p>
+    </header>
+
+    <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <h2 style="color: #2c5530; margin-bottom: 20px;">📹 Seleção de Vídeo</h2>
+        
+        <!-- Dropdown para seleção de vídeos disponíveis -->
+        <div style="margin-bottom: 20px;">
+            <label for="video-select" style="display: block; margin-bottom: 10px; font-weight: bold; color: #2c5530;">
+                Escolha um vídeo disponível:
+            </label>
+            <select id="video-select" 
+                    style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; background: white;"
+                    onchange="onVideoSelected()">
+                <option value="">Carregando vídeos disponíveis...</option>
+            </select>
+        </div>
+        
+        <!-- Display do vídeo selecionado -->
+        <input type="text" id="user-video-display" readonly
+               style="width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 15px; font-size: 16px; background: #f9f9f9;"
+               placeholder="Nenhum vídeo selecionado">
+        
+        
+        <!-- Campos de configuração ocultos -->
+        <div style="display: none;">
+            <select id="maoDominante">
+                <option value="Destro">Destro</option>
+                <option value="Canhoto">Canhoto</option>
+            </select>
+            <select id="ladoCamera">
+                <option value="Direita">Direita</option>
+                <option value="Esquerda">Esquerda</option>
+            </select>
+            <select id="ladoRaquete">
+                <option value="F">Forehand</option>
+                <option value="B">Backhand</option>
+            </select>
+            <select id="tipoMovimento">
+                <option value="D">Drive (Ataque)</option>
+                <option value="P">Push (Defesa)</option>
+            </select>
+        </div>
+        
+        <!-- Seção de Comparação Automática -->
+        <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 25px; border-radius: 15px; border: 2px solid #4caf50; margin-bottom: 20px;">
+            <h3 style="color: #2e7d32; margin-bottom: 15px; display: flex; align-items: center;">
+                🏆 <span style="margin-left: 10px;">Comparação com Profissionais</span>
+                <span style="margin-left: 15px; background: #4caf50; color: white; padding: 4px 12px; border-radius: 12px; font-size: 14px; font-weight: normal;">ANÁLISE POR IA</span>
+            </h3>
+            <p style="margin-bottom: 15px; color: #555; font-size: 16px; line-height: 1.6;">
+                🤖 <strong>Seleção Inteligente:</strong> O sistema compara automaticamente com profissionais e escolhe os mais similares ao seu movimento. Nossa base inclui movimentos de jogadores como Calderano, Harimoto, Ma Long, Chen Meng e muitos outros.
+            </p>
+            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
+                    <div>
+                        <strong style="color: #2e7d32;">🏅 Calderano</strong><br>
+                        <small>Forehand Drive</small>
+                    </div>
+                    <div>
+                        <strong style="color: #2e7d32;">🏅 Harimoto</strong><br>
+                        <small>Forehand Push</small>
+                    </div>
+                    <div>
+                        <strong style="color: #2e7d32;">🏅 Ma Long</strong><br>
+                        <small>Backhand Drive</small>
+                    </div>
+                    <div>
+                        <strong style="color: #2e7d32;">🏅 Chen Meng</strong><br>
+                        <small>Backhand Push</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="biomech-section">
+            <h3 style="color: #2c5530; margin-bottom: 15px; display: flex; align-items: center;">
+                🧬 <span style="margin-left: 10px;">Análise Biomecânica Completa</span>
+                <span style="margin-left: 15px; background: #28a745; color: white; padding: 4px 12px; border-radius: 12px; font-size: 14px; font-weight: normal;">SISTEMA ÚNICO</span>
+            </h3>
+            <p style="margin-bottom: 20px; color: #666; font-size: 16px; line-height: 1.6;">
+                🔬 <strong>Análise científica avançada:</strong> Detecção de pose 2D, análise articular, movimento da raquete e comparação automática com profissionais.<br>
+                🎯 <strong>Comparação inteligente:</strong> Sistema encontra automaticamente os melhores profissionais para comparação baseado no seu movimento.
+            </p>
+            
+            <div style="margin-bottom: 25px; background: #e8f5e8; padding: 15px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                <div style="color: #2c5530; font-weight: 600; margin-bottom: 5px;">
+                    📊 Ciclo Selecionado para Análise
+                </div>
+                <div style="color: #666; font-size: 15px;">
+                    🎯 <strong>2º ciclo</strong> - Automaticamente selecionado por apresentar melhor adequação técnica para análise biomecânica
+                </div>
+            </div>
+            
+            <button class="btn" onclick="analyzeEnhancedCycle()" id="enhancedAnalyzeBtn" 
+                    style="
+                        font-size: 22px; 
+                        padding: 20px 40px; 
+                        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
+                        border: 3px solid #ff6b35;
+                        border-radius: 15px;
+                        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+                        transform: scale(1);
+                        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                        font-weight: bold;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                        position: relative;
+                        overflow: hidden;
+                        color: white;
+                        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                        animation: pulse-glow 2s infinite alternate;
+                    "
+                    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 12px 35px rgba(255, 107, 53, 0.6)';"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 25px rgba(255, 107, 53, 0.4)';"
+                    onmousedown="this.style.transform='scale(0.98)';"
+                    onmouseup="this.style.transform='scale(1.05)';">
+                🚀 INICIAR ANÁLISE BIOMECÂNICA COMPLETA
+            </button>
+            
+            <style>
+                @keyframes pulse-glow {
+                    0% {
+                        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4), 0 0 20px rgba(255, 107, 53, 0.2);
+                    }
+                    100% {
+                        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.6), 0 0 30px rgba(255, 107, 53, 0.4);
+                    }
+                }
+                
+                #enhancedAnalyzeBtn::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                    transition: left 0.5s;
+                }
+                
+                #enhancedAnalyzeBtn:hover::before {
+                    left: 100%;
+                }
+            </style>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #2196F3;">
+                <small style="color: #1976d2;">
+                    <strong>🚀 Sistema Simplificado:</strong> Esta é a análise completa que combina todos os recursos avançados - 
+                    detecção tradicional, biomecânica 2D e comparação profissional automática em um único processo.
+                </small>
+            </div>
+        </div>
+
+        <div id="loading" style="display: none;" class="loading">
+            <div class="spinner"></div>
+            <h3 style="color: #4a7c59;">Executando Análise Biomecânica...</h3>
+            <p>Processando vídeo, detectando movimentos e comparando com profissionais. Isso pode levar alguns minutos.</p>
+        </div>
+
+        <div id="results" class="results-container" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Detectar contexto de acesso e configurar API_BASE automaticamente
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const isNgrok = window.location.hostname.includes('ngrok') || window.location.hostname.includes('ngrok-free.app');
+        const isHttps = window.location.protocol === 'https:';
+        
+        let API_BASE;
+        if (isLocalhost) {
+            // Force API to port 8000 even if interface is served from different port
+            API_BASE = `http://${window.location.hostname}:8000`;
+        } else if (isNgrok) {
+            // Para ngrok, usar a mesma URL base (já inclui protocolo e porta)
+            API_BASE = window.location.origin;
+        } else if (isHttps) {
+            API_BASE = `https://${window.location.hostname}:8000`;
+        } else {
+            API_BASE = `http://${window.location.hostname}:8000`;
+        }
+        
+        console.log('🌐 Contexto detectado:', {
+            hostname: window.location.hostname,
+            protocol: window.location.protocol,
+            isLocalhost: isLocalhost,
+            isNgrok: isNgrok,
+            isHttps: isHttps,
+            API_BASE: API_BASE
+        });
+
+        // Testar conectividade da API
+        async function testApiConnection() {
+            try {
+                console.log('🧪 Testando conectividade da API...');
+                const response = await fetch(`${API_BASE}/docs`);
+                console.log('✅ API acessível:', response.status, response.statusText);
+                return true;
+            } catch (error) {
+                console.error('❌ API inacessível:', error);
+                return false;
+            }
+        }
+        
+        // Testar conectividade e carregar vídeos ao carregar a página
+        testApiConnection();
+        loadAvailableVideos();
+
+        // Variáveis globais para armazenar vídeos disponíveis e seleção atual
+        let availableVideos = [];
+        let currentAnalysisResult = null; // Global variable to store analysis result
+        let selectedVideo = null;
+
+        // Carregar vídeos disponíveis ao inicializar
+        async function loadAvailableVideos() {
+            try {
+                const response = await fetch(`${API_BASE}/available-videos`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    availableVideos = data.videos;
+                    populateVideoSelect();
+                    console.log(`✅ Carregados ${data.total_count} vídeos disponíveis`);
+                } else {
+                    console.error('❌ Erro ao carregar vídeos:', data.error);
+                    showError('Erro ao carregar vídeos disponíveis: ' + data.error);
+                }
+            } catch (error) {
+                console.error('❌ Erro na requisição de vídeos:', error);
+                showError('Erro ao conectar com servidor para carregar vídeos');
+            }
+        }
+
+        function populateVideoSelect() {
+            const videoSelect = document.getElementById('video-select');
+            videoSelect.innerHTML = '<option value="">Selecione um vídeo...</option>';
+            
+            availableVideos.forEach(video => {
+                const option = document.createElement('option');
+                option.value = video.filename;
+                option.textContent = video.display_name;
+                option.dataset.videoData = JSON.stringify(video);
+                videoSelect.appendChild(option);
+            });
+        }
+
+        function onVideoSelected() {
+            const videoSelect = document.getElementById('video-select');
+            const displayInput = document.getElementById('user-video-display');
+            // Referências removidas - elementos de metadados sugeridos não existem mais
+            
+            if (videoSelect.value) {
+                const selectedOption = videoSelect.options[videoSelect.selectedIndex];
+                const videoData = JSON.parse(selectedOption.dataset.videoData);
+                
+                selectedVideo = videoData;
+                displayInput.value = `📹 ${videoData.display_name}`;
+                
+                // Metadados sugeridos removidos - seção não aparece mais
+                
+                console.log('Vídeo selecionado:', videoData);
+            } else {
+                selectedVideo = null;
+                displayInput.value = '';
+                videoInfo.style.display = 'none';
+            }
+        }
+
+        // DISABLED: This function was overriding user selections with filename metadata
+        // User selections should be respected, not overridden by filename parsing
+        function autoFillMetadata(metadata) {
+            // DISABLED: This function overrides user metadata selections
+            // The system should respect what the user selects, not override with filename data
+            /*
+            if (metadata.maoDominante) {
+                document.getElementById('maoDominante').value = metadata.maoDominante;
+            }
+            if (metadata.ladoCamera) {
+                document.getElementById('ladoCamera').value = metadata.ladoCamera;
+            }
+            if (metadata.ladoRaquete) {
+                document.getElementById('ladoRaquete').value = metadata.ladoRaquete;
+            }
+            if (metadata.tipoMovimento) {
+                document.getElementById('tipoMovimento').value = metadata.tipoMovimento;
+            }
+            */
+        }
+
+        async function analyzeEnhancedCycle() {
+            console.log("🔥🔥🔥 INICIANDO ANÁLISE BIOMECÂNICA COMPLETA 🔥🔥🔥");
+            
+            if (!selectedVideo) {
+                alert("Por favor, selecione um vídeo primeiro!");
+                return;
+            }
+            
+            const videoFilename = selectedVideo.filename;
+            
+            // UI Updates
+            const button = document.getElementById('enhancedAnalyzeBtn');
+            const loadingDiv = document.getElementById('loading');
+            const resultsDiv = document.getElementById('results');
+            
+            button.disabled = true;
+            button.textContent = 'PROCESSANDO...';
+            loadingDiv.style.display = 'block';
+            resultsDiv.style.display = 'none';
+            
+            try {
+                const metadata = {
+                    maoDominante: document.getElementById('maoDominante').value,
+                    ladoCamera: document.getElementById('ladoCamera').value,
+                    ladoRaquete: document.getElementById('ladoRaquete').value,
+                    tipoMovimento: document.getElementById('tipoMovimento').value
+                };
+                
+                const cycleIndex = 1; // Sempre usar o 2º ciclo (índice 1)
+                
+                console.log("📊 Enviando para análise:", metadata, "Ciclo:", cycleIndex);
+                console.log("🤖 Comparação automática com todos os profissionais");
+                console.log("📁 Vídeo selecionado:", videoFilename);
+                console.log("🌐 URL da API:", `${API_BASE}/analyze-selected`);
+                
+                const formData = new FormData();
+                formData.append('selected_video', videoFilename);
+                formData.append('metadata', JSON.stringify(metadata));
+                formData.append('cycle_index', cycleIndex);
+                
+                console.log("📤 Enviando requisição...");
+                console.log("🔗 URL completa:", `${API_BASE}/analyze-selected`);
+                console.log("📦 FormData contém:");
+                for (let [key, value] of formData.entries()) {
+                    console.log(`  ${key}: ${value}`);
+                }
+                
+                // Configurar timeout mais longo para uploads
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minutos
+                
+                console.log("🚀 Fazendo fetch...");
+                console.log("📝 FormData contents:");
+                for (let [key, value] of formData.entries()) {
+                    console.log(`  ${key}:`, value);
+                }
+                
+                const response = await fetch(`${API_BASE}/analyze-selected`, {
+                    method: 'POST',
+                    body: formData,
+                    signal: controller.signal
+                });
+                
+                console.log("📡 Response status:", response.status);
+                console.log("📡 Response ok:", response.ok);
+                
+                console.log("📨 Fetch concluído, processando resposta...");
+                
+                clearTimeout(timeoutId);
+                
+                console.log("📥 Status da resposta:", response.status, response.statusText);
+                
+                const result = await response.json();
+                console.log("✅ Resultado completo:", result);
+                
+                
+                
+                if (response.ok && result.success) {
+                    // Generate user cycle video for display (automatically use second cycle - index 1)
+                    if (selectedVideo) {
+                        generateUserCycle(selectedVideo.filename, metadata, 1);  // Always extract second cycle
+                    }
+                    displayBiomechanicalResults(result);
+                } else {
+                    throw new Error(result.detail || result.error || 'Erro na análise');
+                }
+                
+            } catch (error) {
+                console.error("❌ Erro detalhado:", error);
+                
+                let errorMessage = error.message;
+                let errorDetails = '';
+                
+                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Falha na conexão com o servidor';
+                    if (isNgrok && window.location.protocol === 'https:') {
+                        errorDetails = 'Problema de Mixed Content ou CORS. Tentando reconectar...';
+                    } else {
+                        errorDetails = 'Verifique se o servidor está rodando e se não há bloqueios de firewall.';
+                    }
+                } else if (error.name === 'AbortError') {
+                    errorMessage = 'Timeout na requisição';
+                    errorDetails = 'O upload demorou mais de 5 minutos. Tente com um arquivo menor ou verifique a conexão.';
+                } else if (error.message.includes('NetworkError')) {
+                    errorMessage = 'Erro de rede';
+                    errorDetails = 'Problema de conectividade. Verifique sua conexão.';
+                } else if (error.message.includes('Mixed Content')) {
+                    errorMessage = 'Erro de Mixed Content';
+                    errorDetails = 'Problema com HTTPS/HTTP. Recarregue a página e tente novamente.';
+                }
+                
+                alert(`Erro na análise: ${errorMessage}`);
+                resultsDiv.innerHTML = `
+                    <div style="background: #ffebee; border: 2px solid #f44336; border-radius: 8px; padding: 20px; color: #d32f2f;">
+                        <h3>❌ Erro na Análise</h3>
+                        <p><strong>Erro:</strong> ${errorMessage}</p>
+                        <p><small>${errorDetails || 'Verifique se o servidor está rodando e tente novamente.'}</small></p>
+                        <details style="margin-top: 10px;">
+                            <summary style="cursor: pointer;">Detalhes técnicos</summary>
+                            <pre style="background: #f5f5f5; padding: 10px; margin-top: 10px; border-radius: 4px; font-size: 12px;">${error.stack || error.toString()}</pre>
+                        </details>
+                    </div>
+                `;
+                resultsDiv.style.display = 'block';
+            } finally {
+                button.disabled = false;
+                button.textContent = '⚡ INICIAR ANÁLISE BIOMECÂNICA COMPLETA';
+                loadingDiv.style.display = 'none';
+            }
+        }
+        
+        async function generateUserCycle(file, metadata, cycleIndex) {
+            console.log("🎬 Gerando ciclo do usuário com conversão web-friendly");
+            
+            // Show loading message in user cycle container
+            const container = document.getElementById('userCycleVideoContainer');
+            if (container) {
+                container.innerHTML = `
+                    <div style="background: #e3f2fd; border-radius: 10px; padding: 20px; color: #1976d2;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <div style="width: 20px; height: 20px; border: 2px solid #1976d2; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                            <span>🔄 Gerando vídeo web-friendly do seu ciclo...</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            try {
+                // Use the correct GET endpoint for generating user cycles
+                const endpoint = `${API_BASE}/generate-user-cycle/${file}?cycle_index=${cycleIndex}`;
+                console.log("📤 FAZENDO REQUISIÇÃO PARA:", endpoint);
+                console.log("📤 API_BASE:", API_BASE);
+                
+                const response = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                console.log("📥 RESPOSTA STATUS:", response.status, response.statusText);
+                
+                // Enhanced error handling for JSON parsing
+                let result;
+                try {
+                    const responseText = await response.text();
+                    console.log("📥 RESPOSTA TEXT:", responseText);
+                    result = JSON.parse(responseText);
+                    console.log("📥 RESPOSTA JSON PARSED:", result);
+                } catch (parseError) {
+                    console.error("❌ ERRO AO FAZER PARSE JSON:", parseError);
+                    console.error("❌ RESPOSTA QUE CAUSOU ERRO:", responseText);
+                    showUserCycleError("Erro no formato da resposta do servidor");
+                    return;
+                }
+                
+                if (response.ok && result.success) {
+                    console.log("✅ Ciclo web-friendly gerado:", result);
+                    displayUserCycle(result);
+                } else {
+                    console.error("❌ Erro ao gerar ciclo web-friendly:", result);
+                    showUserCycleError("Erro ao gerar ciclo web-friendly");
+                }
+                
+            } catch (error) {
+                console.error("❌ Erro na conversão web-friendly:", error);
+                showUserCycleError("Erro de conexão na conversão web-friendly");
+            }
+        }
+        
+        function translateMovementType(movementType) {
+            const translations = {
+                'forehand_drive': 'Forehand Drive',
+                'forehand_push': 'Forehand Push', 
+                'backhand_drive': 'Backhand Drive',
+                'backhand_push': 'Backhand Push'
+            };
+            return translations[movementType] || movementType;
+        }
+        
+        function displayUserCycle(cycleData) {
+            console.log("🎬 DISPLAY USER CYCLE - Dados recebidos:", cycleData);
+            
+            const container = document.getElementById('userCycleVideoContainer');
+            if (!container) {
+                console.error("❌ Container userCycleVideoContainer não encontrado");
+                return;
+            }
+            
+            if (!cycleData.video_url) {
+                console.error("❌ video_url não encontrado nos dados:", cycleData);
+                showUserCycleError("URL do vídeo não disponível");
+                return;
+            }
+            
+            if (!cycleData.cycle_info) {
+                console.error("❌ cycle_info não encontrado nos dados:", cycleData);
+                showUserCycleError("Informações do ciclo não disponíveis");
+                return;
+            }
+            
+            const mp4Url = `${API_BASE}${cycleData.video_url}?t=${new Date().getTime()}`;
+            const webmUrl = cycleData.webm_url ? `${API_BASE}${cycleData.webm_url}?t=${new Date().getTime()}` : null;
+            const cycleInfo = cycleData.cycle_info;
+            
+            console.log("🎬 MP4 URL gerada:", mp4Url);
+            console.log("🎬 WebM URL gerada:", webmUrl);
+            console.log("🎬 Cycle Info:", cycleInfo);
+            
+            // Create video element with multiple sources for better compatibility
+            let videoSources = '';
+            if (webmUrl) {
+                videoSources += `<source src="${webmUrl}" type="video/webm">`;
+            }
+            videoSources += `<source src="${mp4Url}" type="video/mp4">`;
+            
+            container.innerHTML = `
+                <video controls autoplay loop muted playsinline webkit-playsinline preload="metadata" style="max-width: 100%; max-height: 400px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    ${videoSources}
+                    Seu navegador não suporta o elemento video.
+                </video>
+                <div style="margin-top: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; text-align: center;">
+                    <div style="padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                        <strong style="color: #4a7c59;">Ciclo</strong><br>
+                        <span>${cycleInfo.cycle_index + 1}º ciclo</span>
+                    </div>
+                    <div style="padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                        <strong style="color: #4a7c59;">Duração</strong><br>
+                        <span>${cycleInfo.duration.toFixed(2)}s</span>
+                    </div>
+                    <div style="padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                        <strong style="color: #4a7c59;">Tempo</strong><br>
+                        <span>${cycleInfo.start_time.toFixed(1)}s - ${cycleInfo.end_time.toFixed(1)}s</span>
+                    </div>
+                </div>
+            `;
+            
+            // Add video event listeners for debugging
+            setTimeout(() => {
+                const video = container.querySelector('video');
+                if (video) {
+                    video.addEventListener('loadstart', () => {
+                        console.log("🎬 Video: loadstart");
+                        console.log("🎬 Current source:", video.currentSrc);
+                    });
+                    video.addEventListener('loadeddata', () => {
+                        console.log("🎬 Video: loadeddata");
+                        console.log("🎬 Video dimensions:", video.videoWidth + "x" + video.videoHeight);
+                        console.log("🎬 Video duration:", video.duration);
+                    });
+                    video.addEventListener('canplay', () => {
+                        console.log("🎬 Video: canplay - READY TO PLAY!");
+                        console.log("🎬 Active source:", video.currentSrc);
+                    });
+                    video.addEventListener('error', (e) => {
+                        console.error("❌ Video Error:", e);
+                        console.error("❌ Video Error details:", video.error);
+                        console.error("❌ Failed source:", video.currentSrc);
+                        
+                        // Try to identify which source failed
+                        const sources = video.querySelectorAll('source');
+                        sources.forEach((source, index) => {
+                            console.log(`🔍 Source ${index + 1}: ${source.src} (type: ${source.type})`);
+                        });
+                    });
+                    video.addEventListener('emptied', () => console.log("🎬 Video: emptied"));
+                    video.addEventListener('stalled', () => console.log("⚠️ Video: stalled"));
+                    video.addEventListener('suspend', () => console.log("⏸️ Video: suspend"));
+                    video.addEventListener('waiting', () => console.log("⏳ Video: waiting"));
+                    
+                    console.log("🎬 Video element found, event listeners added");
+                    console.log("🎬 Video sources available:", video.querySelectorAll('source').length);
+                } else {
+                    console.error("❌ Video element not found in container");
+                }
+            }, 100);
+            
+            // Now populate the movement description using stored analysis result
+            setTimeout(() => {
+                if (currentAnalysisResult && currentAnalysisResult.movement_type_display && currentAnalysisResult.dominant_hand_display) {
+                    const movementDescContainer = document.getElementById('movementDescription');
+                    if (movementDescContainer) {
+                        const movementName = translateMovementType(currentAnalysisResult.movement_type_display);
+                        console.log('🔍 Populating movement description:', movementName, '•', currentAnalysisResult.dominant_hand_display);
+                        
+                        // CORREÇÃO: Priorizar detecção automática da mão dominante
+                        let dominantHandDisplay = currentAnalysisResult.dominant_hand_display;
+                        
+                        // Se há informações técnicas indicando mão esquerda detectada, usar isso ao invés dos metadados
+                        const pageText = document.body.innerText || document.body.textContent;
+                        if (pageText.includes('Mão ativa: esquerda') || pageText.includes('esquerda (detecção automática)')) {
+                            dominantHandDisplay = 'Canhoto (detecção automática)';
+                            console.log('🔧 CORREÇÃO: Detectada mão esquerda na página, corrigindo display');
+                        } else if (pageText.includes('Mão ativa: direita') || pageText.includes('direita (detecção automática)')) {
+                            dominantHandDisplay = 'Destro (detecção automática)';
+                            console.log('🔧 CORREÇÃO: Detectada mão direita na página, corrigindo display');
+                        }
+                        
+                        movementDescContainer.innerHTML = `
+                            <div style="
+                                background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%);
+                                color: #1565c0;
+                                padding: 14px 25px;
+                                border-radius: 20px;
+                                margin: 0 auto;
+                                font-weight: 600;
+                                display: inline-block;
+                                box-shadow: 0 3px 12px rgba(21, 101, 192, 0.15);
+                                border: 2px solid rgba(21, 101, 192, 0.1);
+                                font-size: 15px;
+                                letter-spacing: 0.3px;
+                            ">
+                                <span style="margin-right: 8px;">🏓</span>
+                                <span style="color: #0d47a1; font-weight: 700;">${movementName}</span>
+                                <span style="margin: 0 8px; color: #757575;">•</span>
+                                <span style="color: #2e7d32; font-weight: 600;">${dominantHandDisplay}</span>
+                            </div>
+                        `;
+                        console.log('✅ Movement description populated successfully!');
+                    } else {
+                        console.error('❌ movementDescription container not found');
+                    }
+                } else {
+                    console.log('⚠️ No movement data available in currentAnalysisResult');
+                }
+            }, 200); // Wait a bit more to ensure the DOM is fully ready
+            
+            console.log("✅ Vídeo do ciclo do usuário exibido com sucesso");
+        }
+        
+        function showUserCycleError(message) {
+            const container = document.getElementById('userCycleVideoContainer');
+            if (!container) return;
+            
+            container.innerHTML = `
+                <div style="background: #ffebee; border: 1px solid #f44336; border-radius: 10px; padding: 20px; color: #d32f2f;">
+                    <div style="margin-bottom: 10px;">❌ ${message}</div>
+                    <small>O vídeo do ciclo não pôde ser carregado, mas a análise foi concluída com sucesso.</small>
+                </div>
+            `;
+        }
+        
+        function openVideoInNewWindow(videoUrl) {
+            // Método mais simples - abrir URL diretamente sem HTML customizado
+            try {
+                // Tentar abrir o vídeo diretamente
+                const videoWindow = window.open(videoUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+                
+                if (videoWindow) {
+                    console.log("✅ Vídeo aberto em nova janela");
+                } else {
+                    throw new Error("Bloqueador de pop-ups ativo");
+                }
+            } catch (error) {
+                console.error("❌ Erro ao abrir vídeo:", error);
+                
+                // Fallback: copiar link para clipboard e mostrar ao usuário
+                const fallbackMessage = "Não foi possível abrir nova janela automaticamente.\n\n" +
+                                      "LINK DO SEU CICLO:\n" + videoUrl + "\n\n" +
+                                      "Copie este link e cole em uma nova aba do navegador para ver seu vídeo.";
+                
+                alert(fallbackMessage);
+                console.log("🔗 Link do vídeo:", videoUrl);
+                
+                // Tentar copiar para clipboard se possível
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(videoUrl).then(() => {
+                        console.log("📋 Link copiado para clipboard");
+                    }).catch(() => {
+                        console.log("📋 Não foi possível copiar automaticamente");
+                    });
+                }
+            }
+        }
+        
+        async function generateProfessionalCycle(professionalName) {
+            console.log("🎬 Gerando ciclo do profissional:", professionalName);
+            
+            // Find the container for this professional's video
+            const containerId = `professionalVideo_${professionalName.replace(/\s+/g, '_')}`;
+            const container = document.getElementById(containerId);
+            
+            if (!container) {
+                console.error("❌ Container não encontrado para:", containerId);
+                return;
+            }
+            
+            // Show container and display loading message
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div style="background: #e3f2fd; border-radius: 10px; padding: 20px; color: #1976d2;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <div style="width: 20px; height: 20px; border: 2px solid #1976d2; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                        <span>🔄 Gerando vídeo do ciclo de ${professionalName}...</span>
+                    </div>
+                </div>
+            `;
+            
+            try {
+                // Call the professional cycle generation endpoint
+                const endpoint = `${API_BASE}/generate-professional-cycle/${encodeURIComponent(professionalName)}?cycle_index=1`;
+                console.log("📤 Chamando endpoint:", endpoint);
+                
+                const response = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                console.log("📥 Resposta do servidor:", response.status);
+                
+                let result;
+                try {
+                    const responseText = await response.text();
+                    console.log("📥 Resposta texto:", responseText);
+                    result = JSON.parse(responseText);
+                    console.log("📥 Resultado JSON:", result);
+                } catch (parseError) {
+                    console.error("❌ Erro ao fazer parse do JSON:", parseError);
+                    showProfessionalVideoError(container, "Erro no formato da resposta do servidor");
+                    return;
+                }
+                
+                if (response.ok && result.success) {
+                    console.log("✅ Ciclo do profissional gerado:", result);
+                    displayProfessionalVideo(container, result, professionalName);
+                } else {
+                    console.error("❌ Erro ao gerar ciclo do profissional:", result);
+                    showProfessionalVideoError(container, result.detail || "Erro ao gerar vídeo do profissional");
+                }
+                
+            } catch (error) {
+                console.error("❌ Erro na requisição:", error);
+                showProfessionalVideoError(container, "Erro de conexão com o servidor");
+            }
+        }
+        
+        function displayProfessionalVideo(container, videoData, professionalName) {
+            console.log("🎬 Exibindo vídeo do profissional:", videoData);
+            
+            if (!videoData.video_url) {
+                console.error("❌ URL do vídeo não encontrada:", videoData);
+                showProfessionalVideoError(container, "URL do vídeo não disponível");
+                return;
+            }
+            
+            const mp4Url = `${API_BASE}${videoData.video_url}?t=${new Date().getTime()}`;
+            const webmUrl = videoData.webm_url ? `${API_BASE}${videoData.webm_url}?t=${new Date().getTime()}` : null;
+            
+            console.log("🎬 URL MP4 do vídeo profissional:", mp4Url);
+            console.log("🎬 URL WebM do vídeo profissional:", webmUrl);
+            
+            // Create video sources like user video for better compatibility
+            let videoSources = '';
+            if (webmUrl) {
+                videoSources += `<source src="${webmUrl}" type="video/webm">`;
+            }
+            videoSources += `<source src="${mp4Url}" type="video/mp4">`;
+            
+            container.innerHTML = `
+                <div style="background: #e8f5e8; padding: 20px; border-radius: 12px; border: 2px solid #4caf50;">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <h4 style="color: #2c5530; margin: 0;">Vídeo de ${professionalName}</h4>
+                        <p style="color: #666; margin: 5px 0 0 0; font-size: 14px;">
+                            Técnica: ${videoData.technique || 'N/A'} • 
+                            Duração: ${videoData.duration_seconds ? videoData.duration_seconds.toFixed(2) + 's' : 'N/A'} • 
+                            Frames: ${videoData.frames_extracted || 'N/A'}
+                        </p>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <video 
+                            controls 
+                            autoplay 
+                            loop 
+                            muted 
+                            playsinline 
+                            webkit-playsinline 
+                            preload="metadata" 
+                            style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"
+                        >
+                            ${videoSources}
+                            Seu navegador não suporta o elemento video.
+                        </video>
+                    </div>
+                    
+                    <div style="margin-top: 15px; text-align: center;">
+                        <button 
+                            onclick="this.parentElement.parentElement.parentElement.style.display='none'" 
+                            style="background: #757575; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;"
+                        >
+                            ✖️ Fechar
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add video event listeners for debugging
+            setTimeout(() => {
+                const video = container.querySelector('video');
+                if (video) {
+                    video.addEventListener('loadstart', () => {
+                        console.log("🎬 Vídeo profissional: loadstart");
+                    });
+                    video.addEventListener('loadeddata', () => {
+                        console.log("🎬 Vídeo profissional: loadeddata");
+                    });
+                    video.addEventListener('error', (e) => {
+                        console.error("❌ Erro no vídeo profissional:", e);
+                        showProfessionalVideoError(container, "Erro ao carregar vídeo");
+                    });
+                }
+            }, 100);
+            
+            console.log("✅ Vídeo do profissional exibido com sucesso");
+        }
+        
+        function showProfessionalVideoError(container, message) {
+            container.innerHTML = `
+                <div style="background: #ffebee; border: 1px solid #f44336; border-radius: 10px; padding: 20px; color: #d32f2f; text-align: center;">
+                    <div style="margin-bottom: 10px;">❌ ${message}</div>
+                    <small>Não foi possível gerar o vídeo do profissional no momento.</small>
+                    <div style="margin-top: 10px;">
+                        <button 
+                            onclick="this.parentElement.parentElement.style.display='none'" 
+                            style="background: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;"
+                        >
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function displayBiomechanicalResults(result) {
+            const resultsDiv = document.getElementById('results');
+            
+            const scoreColor = result.final_score >= 80 ? '#4CAF50' : 
+                              result.final_score >= 60 ? '#2196F3' : 
+                              result.final_score >= 40 ? '#FF9800' : '#f44336';
+            
+            // Store analysis result globally for later use in displayUserCycle
+            currentAnalysisResult = result;
+            console.log('🔍 Stored analysis result globally:', {
+                movement_type_display: result.movement_type_display,
+                dominant_hand_display: result.dominant_hand_display
+            });
+            
+            // Marca removida - metadados sugeridos não existem mais
+            
+            console.log('📊 Dados de comparação recebidos:', result.professional_comparisons);
+            
+            
+            // Função para criar tabela explicativa dos parâmetros
+            const createParametersExplanationTable = () => {
+                return `
+                    <div style="margin-top: 40px; background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%); padding: 25px; border-radius: 15px; border-left: 5px solid #2196f3;">
+                        <h3 style="color: #2c5530; margin-bottom: 20px; text-align: center;">📚 Guia dos Parâmetros Biomecânicos</h3>
+                        <p style="text-align: center; color: #666; margin-bottom: 25px; font-style: italic;">
+                            Entenda o que cada parâmetro representa e como é calculado pelo sistema
+                        </p>
+                        
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); font-size: 13px;">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); color: white;">
+                                        <th style="padding: 12px; text-align: left; font-size: 13px; width: 18%;">Parâmetro</th>
+                                        <th style="padding: 12px; text-align: left; font-size: 13px; width: 45%;">Significado</th>
+                                        <th style="padding: 12px; text-align: center; font-size: 13px; width: 12%;">Unidade</th>
+                                        <th style="padding: 12px; text-align: center; font-size: 13px; width: 25%;">Valores de Referência</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid #e0e0e0; background: #f9f9f9;">
+                                        <td style="padding: 10px; font-weight: 600; color: #2c5530; font-size: 12px;">
+                                            💪 Variação do Cotovelo
+                                        </td>
+                                        <td style="padding: 10px; color: #555; line-height: 1.3; font-size: 12px;">
+                                            Mede a amplitude angular do movimento do cotovelo durante o golpe. Indica a flexibilidade e controle da execução técnica.
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; font-family: monospace; color: #333; font-size: 11px;">
+                                            Graus (°)
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; color: #555; font-size: 11px;">
+                                            <div><strong style="color: #4caf50;">Ideal:</strong> 60-120°</div>
+                                            <div><strong style="color: #ff9800;">Aceitável:</strong> 40-140°</div>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e0e0e0; background: white;">
+                                        <td style="padding: 10px; font-weight: 600; color: #2c5530; font-size: 12px;">
+                                            🤝 Coordenação
+                                        </td>
+                                        <td style="padding: 10px; color: #555; line-height: 1.3; font-size: 12px;">
+                                            Avalia a sincronia entre diferentes grupos musculares. Reflete a qualidade da coordenação intermuscular e fluidez do movimento.
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; font-family: monospace; color: #333; font-size: 11px;">
+                                            Percentual (%)
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; color: #555; font-size: 11px;">
+                                            <div><strong style="color: #4caf50;">Excelente:</strong> >70%</div>
+                                            <div><strong style="color: #ff9800;">Boa:</strong> 50-70%</div>
+                                            <div><strong style="color: #f44336;">Precisa melhorar:</strong> <50%</div>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e0e0e0; background: #f9f9f9;">
+                                        <td style="padding: 10px; font-weight: 600; color: #2c5530; font-size: 12px;">
+                                            📏 Amplitude do Movimento
+                                        </td>
+                                        <td style="padding: 10px; color: #555; line-height: 1.3; font-size: 12px;">
+                                            Representa a extensão vertical do movimento em relação ao quadro de vídeo. Indica a amplitude espacial do golpe.
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; font-family: monospace; color: #333; font-size: 11px;">
+                                            Percentual (%)
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; color: #555; font-size: 11px;">
+                                            <div><strong style="color: #2196f3;">Drive:</strong> 15-30%</div>
+                                            <div><strong style="color: #2196f3;">Push:</strong> 8-20%</div>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e0e0e0; background: white;">
+                                        <td style="padding: 10px; font-weight: 600; color: #2c5530; font-size: 12px;">
+                                            ⚡ Velocidade Máxima
+                                        </td>
+                                        <td style="padding: 10px; color: #555; line-height: 1.3; font-size: 12px;">
+                                            Velocidade máxima detectada durante o movimento. Calculada em pixels por frame e pode ser convertida para m/s (×0.01).
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; font-family: monospace; color: #333; font-size: 11px;">
+                                            px/frame
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; color: #555; font-size: 11px;">
+                                            <div><strong style="color: #4caf50;">Alto:</strong> >0.4</div>
+                                            <div><strong style="color: #ff9800;">Médio:</strong> 0.1-0.4</div>
+                                            <div><strong style="color: #f44336;">Baixo:</strong> <0.1</div>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e0e0e0; background: #f9f9f9;">
+                                        <td style="padding: 10px; font-weight: 600; color: #2c5530; font-size: 12px;">
+                                            ⏱️ Padrão Temporal
+                                        </td>
+                                        <td style="padding: 10px; color: #555; line-height: 1.3; font-size: 12px;">
+                                            Caracteriza o ritmo e timing do movimento. Analisa se o golpe é explosivo, controlado ou possui buildup gradual de velocidade.
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; font-family: monospace; color: #333; font-size: 11px;">
+                                            Categoria
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; color: #555; font-size: 11px;">
+                                            <div><strong>Push Controlado</strong></div>
+                                            <div><strong>Buildup Lento</strong></div>
+                                            <div><strong>Push Rápido</strong></div>
+                                            <div><strong>Drive Explosivo</strong></div>
+                                        </td>
+                                    </tr>
+                                    <tr style="background: white;">
+                                        <td style="padding: 10px; font-weight: 600; color: #2c5530; font-size: 12px;">
+                                            🔖 Assinatura do Movimento
+                                        </td>
+                                        <td style="padding: 10px; color: #555; line-height: 1.3; font-size: 12px;">
+                                            Impressão biomecânica única do jogador. Combina múltiplos fatores para criar um "fingerprint" do estilo de jogo individual.
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; font-family: monospace; color: #333; font-size: 11px;">
+                                            Índice (0-1)
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; color: #555; font-size: 11px;">
+                                            <div><strong style="color: #2196f3;">Único por jogador</strong></div>
+                                            <div>Valores 0.0 - 1.0</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(33, 150, 243, 0.1); border-radius: 8px; border-left: 4px solid #2196f3;">
+                            <h4 style="color: #1976d2; margin-bottom: 10px;">ℹ️ Como Interpretar os Resultados</h4>
+                            <ul style="margin: 0; color: #555; line-height: 1.6;">
+                                <li><strong>Similaridade Alta (80%+):</strong> Seu movimento está muito próximo ao do profissional neste parâmetro</li>
+                                <li><strong>Similaridade Média (60-79%):</strong> Boa execução, com pequenos ajustes necessários</li>
+                                <li><strong>Similaridade Baixa (<60%):</strong> Área com potencial de melhoria significativa</li>
+                                <li><strong>Peso do Parâmetro:</strong> Indica o quanto cada métrica contribui para o score final</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-top: 15px; text-align: center; font-size: 11px; color: #888;">
+                            <em>* Todos os cálculos são baseados em análise de pose 2D com MediaPipe e algoritmos proprietários de biomecânica esportiva</em>
+                        </div>
+                    </div>
+                `;
+            };
+            
+            let professionalComparisons = '';
+            if (result.professional_comparisons && result.professional_comparisons.length > 0) {
+                console.log('✅ Encontradas', result.professional_comparisons.length, 'comparações com profissionais');
+                professionalComparisons = `
+                    <div style="margin-top: 30px;">
+                        <h3 style="color: #2c5530;">Comparações com Profissionais (${result.professional_comparisons.length})</h3>
+                        ${result.professional_comparisons.slice(0, 3).map(comp => {
+                            // Criar tabela comparativa detalhada
+                            let comparisonTable = '';
+                            if (comp.detailed_comparison && comp.detailed_comparison.individual_similarities) {
+                                const similarities = comp.detailed_comparison.individual_similarities;
+                                const weights = comp.detailed_comparison.weights_used;
+                                const userMetrics = comp.detailed_comparison.user_metrics;
+                                const profMetrics = comp.detailed_comparison.professional_metrics;
+                                
+                                // Mapeamento de nomes técnicos para nomes amigáveis
+                                const parameterNames = {
+                                    'elbow_variation': 'Variação do Cotovelo',
+                                    'coordination': 'Coordenação',
+                                    'amplitude': 'Amplitude do Movimento',
+                                    'velocity': 'Velocidade Máxima',
+                                    'temporal_pattern': 'Padrão Temporal',
+                                    'movement_signature': 'Assinatura do Movimento'
+                                };
+                                
+                                // Unidades e formatação por parâmetro
+                                const parameterUnits = {
+                                    'elbow_variation': '°',
+                                    'coordination': '%',
+                                    'amplitude': '%',
+                                    'velocity': 'px/f',
+                                    'temporal_pattern': '',
+                                    'movement_signature': ''
+                                };
+                                
+                                comparisonTable = `
+                                    <div style="margin-top: 15px;">
+                                        <h4 style="color: #2c5530; margin-bottom: 10px; font-size: 14px;">Análise Comparativa Detalhada</h4>
+                                        <div style="overflow-x: auto;">
+                                            <table class="comparison-table">
+                                                <thead>
+                                                <tr style="background: linear-gradient(135deg, #4a7c59 0%, #2c5530 100%); color: white;">
+                                                    <th style="padding: 10px; text-align: left; border-right: 1px solid rgba(255,255,255,0.2);">Parâmetro</th>
+                                                    <th style="padding: 10px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2);">Você</th>
+                                                    <th style="padding: 10px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2);">${comp.professional_name}</th>
+                                                    <th style="padding: 10px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2);">Similaridade</th>
+                                                    <th style="padding: 10px; text-align: center;">Peso</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${Object.keys(similarities).map((param, index) => {
+                                                    const similarity = similarities[param];
+                                                    const weight = weights[param] || 0;
+                                                    const userValue = userMetrics[param];
+                                                    const profValue = profMetrics[param];
+                                                    const paramName = parameterNames[param] || param;
+                                                    
+                                                    // Calcular cor baseada na similaridade
+                                                    const similarityPercent = similarity * 100;
+                                                    let similarityColor = '#f44336'; // Vermelho
+                                                    if (similarityPercent >= 80) similarityColor = '#4caf50'; // Verde
+                                                    else if (similarityPercent >= 60) similarityColor = '#ffc107'; // Amarelo
+                                                    else if (similarityPercent >= 40) similarityColor = '#ff9800'; // Laranja
+                                                    
+                                                    // Formatar valores com unidades apropriadas
+                                                    const formatValue = (val, param) => {
+                                                        if (typeof val === 'number') {
+                                                            // Formatação específica por parâmetro
+                                                            if (param === 'elbow_variation') {
+                                                                return val.toFixed(1) + '°';
+                                                            } else if (param === 'coordination') {
+                                                                return (val * 100).toFixed(1) + '%';
+                                                            } else if (param === 'amplitude') {
+                                                                return (val * 100).toFixed(1) + '%';
+                                                            } else if (param === 'velocity') {
+                                                                return val.toFixed(3) + ' px/f';
+                                                            } else if (param === 'movement_signature') {
+                                                                return val.toFixed(3);
+                                                            } else {
+                                                                return val.toFixed(3);
+                                                            }
+                                                        } else if (typeof val === 'string') {
+                                                            // Traduzir padrões temporais
+                                                            const patterns = {
+                                                                'controlled_push': 'Push Controlado',
+                                                                'slow_buildup': 'Buildup Lento',
+                                                                'quick_push': 'Push Rápido',
+                                                                'explosive_drive': 'Drive Explosivo'
+                                                            };
+                                                            return patterns[val] || val;
+                                                        }
+                                                        return val || 'N/A';
+                                                    };
+                                                    
+                                                    return `
+                                                        <tr style="border-bottom: 1px solid #e0e0e0; ${index % 2 === 0 ? 'background: #f9f9f9;' : 'background: white;'}">
+                                                            <td style="padding: 8px; font-weight: 500; color: #2c5530;">${paramName}</td>
+                                                            <td style="padding: 8px; text-align: center; font-family: monospace;">${formatValue(userValue, param)}</td>
+                                                            <td style="padding: 8px; text-align: center; font-family: monospace;">${formatValue(profValue, param)}</td>
+                                                            <td style="padding: 8px; text-align: center;">
+                                                                <div style="display: flex; align-items: center; justify-content: center; gap: 5px;">
+                                                                    <div style="background: #e0e0e0; height: 6px; width: 50px; border-radius: 3px; overflow: hidden;">
+                                                                        <div style="background: ${similarityColor}; height: 100%; width: ${similarityPercent}%; transition: width 0.3s ease;"></div>
+                                                                    </div>
+                                                                    <span style="color: ${similarityColor}; font-weight: 600; font-size: 11px;">${similarityPercent.toFixed(1)}%</span>
+                                                                </div>
+                                                            </td>
+                                                            <td style="padding: 8px; text-align: center; color: #666; font-size: 11px;">${(weight * 100).toFixed(0)}%</td>
+                                                        </tr>
+                                                    `;
+                                                }).join('')}
+                                            </tbody>
+                                        </table>
+                                        <div style="margin-top: 8px; font-size: 10px; color: #666;">
+                                            <div style="text-align: center; margin-bottom: 5px;">
+                                                <span>🟢 Verde (80%+): Excelente | 🟡 Amarelo (60-79%): Boa | 🟠 Laranja (40-59%): Regular | 🔴 Vermelho (<40%): Precisa melhorar</span>
+                                            </div>
+                                            <div style="text-align: center; font-size: 9px; color: #888;">
+                                                <strong>Unidades:</strong> ° = graus | % = percentual | px/f = pixels por frame
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            }
+                            
+                            return `
+                                <div class="professional-comparison" style="margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 12px; border-left: 4px solid #4caf50;">
+                                    <div style="display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 15px;">
+                                        <div style="display: flex; flex-direction: column; justify-content: center; flex-grow: 1;">
+                                            <div style="margin-bottom: 5px;">
+                                                <strong style="font-size: 16px; color: #2c5530;">${comp.professional_name}</strong>
+                                            </div>
+                                            <div>
+                                                <span style="padding: 4px 12px; background: #4caf50; color: white; border-radius: 20px; font-size: 14px; font-weight: 600;">
+                                                    ${(comp.similarity_score * 100).toFixed(1)}% Similar
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div style="display: flex; flex-direction: column; align-items: center; margin-left: 15px;">
+                                            <button 
+                                                onclick="generateProfessionalCycle('${comp.professional_name}')" 
+                                                style="
+                                                    padding: 10px 18px; 
+                                                    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+                                                    color: white; 
+                                                    border: 2px solid #2196f3; 
+                                                    border-radius: 8px; 
+                                                    font-size: 14px; 
+                                                    font-weight: 600;
+                                                    cursor: pointer; 
+                                                    transition: all 0.3s ease;
+                                                    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+                                                    position: relative;
+                                                    overflow: hidden;
+                                                "
+                                                onmouseover="
+                                                    this.style.transform='translateY(-2px)';
+                                                    this.style.boxShadow='0 6px 16px rgba(33, 150, 243, 0.4)';
+                                                    this.style.background='linear-gradient(135deg, #1976d2 0%, #1565c0 100%)';
+                                                "
+                                                onmouseout="
+                                                    this.style.transform='translateY(0)';
+                                                    this.style.boxShadow='0 4px 12px rgba(33, 150, 243, 0.3)';
+                                                    this.style.background='linear-gradient(135deg, #2196f3 0%, #1976d2 100%)';
+                                                "
+                                            >
+                                                📺 Gerar Vídeo do Profissional
+                                            </button>
+                                            <div style="margin-top: 6px; font-size: 11px; color: #666; text-align: center; max-width: 140px; line-height: 1.2;">
+                                                <em>Vídeo de referência para comparação</em>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Container para vídeo do profissional -->
+                                    <div id="professionalVideo_${comp.professional_name.replace(/\s+/g, '_')}" style="margin-top: 15px; text-align: center; display: none;">
+                                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border: 2px dashed #4caf50;">
+                                            <p style="margin: 0; color: #2c5530; font-weight: 600;">Vídeo do Profissional (Em breve)</p>
+                                        </div>
+                                    </div>
+                                    
+                                    ${comparisonTable}
+                                    
+                                    <div style="margin-top: 15px; padding: 12px; background: white; border-radius: 8px; border-left: 3px solid #2196f3;">
+                                        <strong style="color: #2196f3;">💡 Recomendações:</strong>
+                                        <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                                            ${comp.recommendations && comp.recommendations.length > 0 
+                                                ? comp.recommendations.slice(0, 3).map(rec => `<li style="margin: 4px 0; color: #555;">${rec}</li>`).join('')
+                                                : '<li style="color: #888;">Análise detalhada disponível.</li>'}
+                                        </ul>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } else {
+                console.log('⚠️ Nenhuma comparação com profissionais encontrada');
+                professionalComparisons = `
+                    <div style="margin-top: 30px; background: #fff3e0; padding: 20px; border-radius: 10px; border-left: 4px solid #ff9800;">
+                        <h3 style="color: #f57c00;">⚠️ Comparação com Profissionais</h3>
+                        <p>Nenhuma comparação foi encontrada. Isso pode acontecer se:</p>
+                        <ul style="margin: 10px 0;">
+                            <li>O movimento não foi detectado corretamente</li>
+                            <li>Não há profissionais cadastrados para este tipo de movimento</li>
+                            <li>Houve um erro durante a comparação</li>
+                        </ul>
+                        <small>Verifique os logs do console para mais detalhes.</small>
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = `
+                <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%); border: 2px solid ${scoreColor}; border-radius: 15px; padding: 30px;">
+                    <h2 style="text-align: center; color: #2c5530; margin-bottom: 30px;">
+                        🏓 Resultado da Análise Biomecânica Completa
+                    </h2>
+                    
+                    <!-- Status Card Elegante -->
+                    <div style="
+                        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                        border: 1px solid #dee2e6;
+                        border-radius: 16px;
+                        padding: 20px;
+                        margin: 20px auto;
+                        max-width: 500px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                    ">
+                        <!-- Header do Status -->
+                        <div style="text-align: center; margin-bottom: 16px;">
+                            <div style="
+                                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                                color: white;
+                                padding: 8px 20px;
+                                border-radius: 25px;
+                                font-size: 14px;
+                                font-weight: 600;
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 8px;
+                                box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+                            ">
+                                ✅ Análise Biomecânica Concluída
+                            </div>
+                        </div>
+                        
+                        <!-- Informações em Grid -->
+                        <div style="
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 12px;
+                            margin-top: 16px;
+                        ">
+                            <!-- Data/Hora -->
+                            <div style="
+                                background: rgba(108, 117, 125, 0.1);
+                                padding: 10px 12px;
+                                border-radius: 8px;
+                                text-align: center;
+                                border-left: 3px solid #6c757d;
+                            ">
+                                <div style="font-size: 11px; color: #6c757d; font-weight: 500; margin-bottom: 2px;">
+                                    📅 PROCESSADO EM
+                                </div>
+                                <div style="font-size: 12px; color: #495057; font-weight: 600;">
+                                    ${new Date().toLocaleDateString('pt-BR')}<br>
+                                    ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})}
+                                </div>
+                            </div>
+                            
+                            <!-- Tipo de Análise -->
+                            <div style="
+                                background: rgba(255, 193, 7, 0.1);
+                                padding: 10px 12px;
+                                border-radius: 8px;
+                                text-align: center;
+                                border-left: 3px solid #ffc107;
+                            ">
+                                <div style="font-size: 11px; color: #e68900; font-weight: 500; margin-bottom: 2px;">
+                                    🤖 TECNOLOGIA
+                                </div>
+                                <div style="font-size: 12px; color: #b45309; font-weight: 600;">
+                                    Inteligência<br>Artificial 2D
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Versão (discreta) -->
+                        <div style="
+                            text-align: center;
+                            margin-top: 12px;
+                            font-size: 10px;
+                            color: #adb5bd;
+                            letter-spacing: 0.5px;
+                        ">
+                            ENGINE v16.2 • BIOMECH 2D
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h4 style="color: #2c5530; margin-bottom: 15px;">Métricas Principais</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <strong style="color: #4a7c59;">Score Final</strong><br>
+                                <span style="font-size: 24px; color: ${scoreColor};">${result.final_score ? result.final_score.toFixed(1) + '%' : 'N/A'}</span>
+                            </div>
+                            <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <strong style="color: #4a7c59;">Tipo de Análise</strong><br>
+                                <span style="font-size: 14px;">Biomecânica 2D</span>
+                            </div>
+                            <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <strong style="color: #4a7c59;">Comparações</strong><br>
+                                <span style="font-size: 18px;">${result.professional_comparisons ? result.professional_comparisons.length : 0}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Explicação do Score Final -->
+                        <div style="margin-top: 15px; padding: 15px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid #007bff;">
+                            <h5 style="color: #007bff; margin: 0 0 10px 0; font-size: 14px; font-weight: 600;">💡 O que significa o Score Final?</h5>
+                            <div style="font-size: 13px; color: #495057; line-height: 1.5;">
+                                <p style="margin: 0 0 8px 0;"><strong>Avaliação da qualidade técnica geral</strong> do seu movimento, baseada em:</p>
+                                <ul style="margin: 8px 0; padding-left: 20px;">
+                                    <li>🎥 <strong>Qualidade da detecção de pose</strong> - Precisão na identificação dos pontos corporais</li>
+                                    <li>🏃 <strong>Fluidez do movimento</strong> - Consistência e suavidade da execução técnica</li>
+                                    <li>⚡ <strong>Dinâmica do movimento</strong> - Velocidade e aceleração adequadas</li>
+                                    <li>🎯 <strong>Completude da técnica</strong> - Presença das fases: preparação, contato e finalização</li>
+                                </ul>
+                                <div style="margin-top: 10px; padding: 8px; background: white; border-radius: 4px; border: 1px solid #e3f2fd;">
+                                    ${(() => {
+                                        const score = result.final_score || 0;
+                                        let interpretation = '';
+                                        let emoji = '';
+                                        if (score >= 95) {
+                                            interpretation = 'Técnica excepcional! Movimento praticamente perfeito com excelente detecção.';
+                                            emoji = '🏆';
+                                        } else if (score >= 90) {
+                                            interpretation = 'Técnica excelente! Movimento de alta qualidade com boa detecção.';
+                                            emoji = '🥇';
+                                        } else if (score >= 80) {
+                                            interpretation = 'Técnica muito boa! Movimento sólido com pequenos pontos de refinamento.';
+                                            emoji = '🥈';
+                                        } else if (score >= 70) {
+                                            interpretation = 'Técnica boa! Base sólida com alguns aspectos a melhorar.';
+                                            emoji = '🥉';
+                                        } else if (score >= 60) {
+                                            interpretation = 'Técnica regular. Movimento detectado, mas precisa de aprimoramento.';
+                                            emoji = '📈';
+                                        } else {
+                                            interpretation = 'Técnica precisa melhorar. Dificuldades na detecção ou execução do movimento.';
+                                            emoji = '🔧';
+                                        }
+                                        return `<strong>${emoji} Interpretação (${score.toFixed(1)}%):</strong> ${interpretation}`;
+                                    })()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- User Cycle Video Section -->
+                    <div style="margin-top: 30px; background: white; padding: 25px; border-radius: 15px;">
+                        <!-- Título melhorado -->
+                        <div style="
+                            text-align: center;
+                            margin-bottom: 15px;
+                            background: linear-gradient(135deg, #2c5530 0%, #4a7c59 100%);
+                            color: white;
+                            padding: 12px 25px;
+                            border-radius: 25px;
+                            display: inline-block;
+                            margin-left: 50%;
+                            transform: translateX(-50%);
+                            box-shadow: 0 3px 15px rgba(44, 85, 48, 0.3);
+                            font-weight: 600;
+                            font-size: 16px;
+                            letter-spacing: 0.5px;
+                        ">
+                            🎯 Análise do Seu Movimento
+                        </div>
+                        <div id="movementDescription" style="text-align: center; margin-bottom: 20px;">
+                            <!-- Será preenchido com os dados do movimento -->
+                        </div>
+                        
+                        <!-- Seção de Correção Manual -->
+                        <div id="correctionSection" style="background: #fff3e0; border: 2px solid #ff9800; border-radius: 10px; padding: 20px; margin: 20px 0; display: none;">
+                            <h4 style="color: #e65100; margin-bottom: 15px; text-align: center;">
+                                🔧 Correção Manual de Movimento
+                            </h4>
+                            <p style="color: #ef6c00; text-align: center; margin-bottom: 20px; font-size: 14px;">
+                                Se você acha que o movimento foi detectado incorretamente, pode corrigi-lo manualmente:
+                            </p>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                                <div style="text-align: center;">
+                                    <label style="display: block; margin-bottom: 8px; color: #e65100; font-weight: bold;">Lado da Raquete:</label>
+                                    <select id="correctionRacketSide" style="width: 100%; padding: 10px; border: 2px solid #ff9800; border-radius: 5px;">
+                                        <option value="forehand">Forehand (direita)</option>
+                                        <option value="backhand">Backhand (esquerda)</option>
+                                    </select>
+                                </div>
+                                <div style="text-align: center;">
+                                    <label style="display: block; margin-bottom: 8px; color: #e65100; font-weight: bold;">Tipo de Movimento:</label>
+                                    <select id="correctionMovementType" style="width: 100%; padding: 10px; border: 2px solid #ff9800; border-radius: 5px;">
+                                        <option value="drive">Drive (ataque)</option>
+                                        <option value="push">Push (controle)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center;">
+                                <button id="applyCorrectionBtn" onclick="applyCorrectionManual()" class="btn" style="background: linear-gradient(135deg, #ff9800 0%, #e65100 100%); margin: 0 10px;">
+                                    🔄 Aplicar Correção
+                                </button>
+                                <button id="cancelCorrectionBtn" onclick="cancelCorrection()" class="btn" style="background: linear-gradient(135deg, #757575 0%, #424242 100%); margin: 0 10px;">
+                                    ✖️ Cancelar
+                                </button>
+                            </div>
+                            
+                            <div style="margin-top: 15px; padding: 12px; background: #fff8e1; border: 1px solid #ffcc02; border-radius: 6px;">
+                                <p style="margin: 0; color: #f57c00; font-size: 12px; text-align: center;">
+                                    ⚠️ <strong>Importante:</strong> Após a correção, uma nova análise será executada com os profissionais corretos.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Botão para mostrar correção -->
+                        <div id="correctionTrigger" style="text-align: center; margin-bottom: 20px; display: none;">
+                            <button onclick="showCorrectionSection()" class="btn" id="correctionBtn"
+                                    style="
+                                        background: linear-gradient(135deg, #ff9800 0%, #f57c00 50%, #e65100 100%);
+                                        border: 2px solid #ff9800;
+                                        border-radius: 12px;
+                                        font-size: 16px; 
+                                        padding: 15px 25px;
+                                        box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
+                                        transition: all 0.3s ease;
+                                        font-weight: 600;
+                                        text-transform: none;
+                                        letter-spacing: 0.5px;
+                                        position: relative;
+                                        overflow: hidden;
+                                        animation: gentle-pulse 3s infinite ease-in-out;
+                                    "
+                                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255, 152, 0, 0.4)';"
+                                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(255, 152, 0, 0.3)';">
+                                🔧 Movimento detectado incorretamente? Clique para corrigir
+                            </button>
+                            
+                            <!-- Explicação educativa -->
+                            <div style="margin-top: 15px; padding: 15px; background: #fff8e1; border-radius: 10px; border-left: 4px solid #ff9800; max-width: 500px; margin-left: auto; margin-right: auto;">
+                                <div style="font-size: 14px; color: #e65100; margin-bottom: 8px;">
+                                    <strong>🤖 Por que a detecção pode falhar?</strong>
+                                </div>
+                                <div style="font-size: 13px; color: #bf360c; line-height: 1.4; text-align: left;">
+                                    A detecção automática pode ser imprecisa devido a:
+                                    <ul style="margin: 8px 0; padding-left: 20px;">
+                                        <li><strong>Iluminação inadequada</strong> - muita sombra ou contraste</li>
+                                        <li><strong>Qualidade da imagem</strong> - resolução baixa ou tremulação</li>
+                                        <li><strong>Movimentos ao fundo</strong> - outras pessoas ou objetos</li>
+                                        <li><strong>Ângulo da câmera</strong> - perspectiva muito lateral ou frontal</li>
+                                        <li><strong>Velocidade do movimento</strong> - muito rápido ou lento</li>
+                                        <li><strong>Roupas similares ao fundo</strong> - dificuldade de detecção corporal</li>
+                                    </ul>
+                                    💡 <em>Em caso de erro, use a correção manual clicando no botão acima!</em>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <style>
+                            @keyframes gentle-pulse {
+                                0%, 100% {
+                                    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
+                                }
+                                50% {
+                                    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.5), 0 0 15px rgba(255, 152, 0, 0.2);
+                                }
+                            }
+                            
+                            #correctionBtn::before {
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                left: -100%;
+                                width: 100%;
+                                height: 100%;
+                                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                                transition: left 0.6s;
+                            }
+                            
+                            #correctionBtn:hover::before {
+                                left: 100%;
+                            }
+                        </style>
+                        <div id="userCycleVideoContainer" style="text-align: center;">
+                            <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; color: #666;">
+                                <div style="margin-bottom: 15px;">⏳ Carregando seu ciclo...</div>
+                                <div style="width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #4a7c59; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px; padding: 15px; background: #e8f5e9; border-radius: 8px; text-align: center;">
+                            <small style="color: #2e7d32;">
+                                💡 <strong>Este é o ciclo específico que foi analisado:</strong> O sistema extraiu e analisou este movimento para gerar sua pontuação
+                            </small>
+                        </div>
+                    </div>
+                    
+                    ${professionalComparisons}
+                    
+                    ${result.professional_comparisons && result.professional_comparisons.length > 0 ? createParametersExplanationTable() : ''}
+                    
+                    ${result.recommendations && Array.isArray(result.recommendations) && result.recommendations.length > 0 ? `
+                        <div style="margin-top: 30px; background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #6c757d;">
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #495057; margin: 0; font-size: 16px; font-weight: 600;">Informações Técnicas da Análise</h4>
+                                <p style="color: #6c757d; margin: 5px 0 0 0; font-size: 12px; font-style: italic;">Dados extraídos do movimento analisado</p>
+                            </div>
+                            <div style="background: white; padding: 15px; border-radius: 6px; border: 1px solid #e9ecef;">
+                                <ul style="line-height: 1.6; margin: 0; font-size: 14px; color: #495057; list-style: none; padding: 0;">
+                                    ${result.recommendations.slice(0, 5).map(rec => `
+                                        <li style="margin-bottom: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
+                                            ${rec.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')}
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                            <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px;">
+                                <p style="margin: 0; color: #856404; font-size: 12px; text-align: center;">
+                                    ⚠️ <strong>Aviso:</strong> Estas são estimativas baseadas em análise computacional e não devem ser consideradas como valores absolutos. 
+                                    Para orientação técnica precisa, consulte um profissional qualificado.
+                                </p>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 12px; text-align: center; border-left: 4px solid #4caf50;">
+                        <div style="margin-bottom: 10px;">
+                            <small style="color: #2e7d32; font-size: 14px;">
+                                ✅ <strong>Análise Completa Realizada:</strong> Sistema biomecânico integrado com comparação profissional automática
+                            </small>
+                        </div>
+                        <div style="border-top: 1px solid rgba(46, 125, 50, 0.2); padding-top: 10px; margin-top: 10px;">
+                            <small style="color: #388e3c; font-size: 12px; font-style: italic;">
+                                🏓 <strong>Desenvolvido por:</strong> Américo Okubo (julho/2025)
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            // Mostrar botão de correção após análise
+            setTimeout(() => {
+                const correctionTrigger = document.getElementById('correctionTrigger');
+                if (correctionTrigger) {
+                    correctionTrigger.style.display = 'block';
+                }
+            }, 1000);
+        }
+        
+        // Variáveis globais para correção
+        let currentAnalysisId = null;
+        let currentOriginalMetadata = null;
+        
+        function showCorrectionSection() {
+            console.log('🔧 Showing correction section');
+            const correctionSection = document.getElementById('correctionSection');
+            const correctionTrigger = document.getElementById('correctionTrigger');
+            
+            if (correctionSection && correctionTrigger) {
+                correctionSection.style.display = 'block';
+                correctionTrigger.style.display = 'none';
+                
+                // Auto-populate based on current analysis if available
+                if (currentAnalysisResult) {
+                    const racketSideSelect = document.getElementById('correctionRacketSide');
+                    const movementTypeSelect = document.getElementById('correctionMovementType');
+                    
+                    if (currentAnalysisResult.movement_detected) {
+                        const movement = currentAnalysisResult.movement_detected.toLowerCase();
+                        
+                        // Set racket side
+                        if (movement.includes('forehand')) {
+                            racketSideSelect.value = 'forehand';
+                        } else if (movement.includes('backhand')) {
+                            racketSideSelect.value = 'backhand';
+                        }
+                        
+                        // Set movement type
+                        if (movement.includes('drive')) {
+                            movementTypeSelect.value = 'drive';
+                        } else if (movement.includes('push')) {
+                            movementTypeSelect.value = 'push';
+                        }
+                    }
+                }
+                
+                // Store analysis ID and metadata for correction
+                if (currentAnalysisResult) {
+                    currentAnalysisId = currentAnalysisResult.analysis_id;
+                    currentOriginalMetadata = JSON.stringify({
+                        maoDominante: document.getElementById('maoDominante').value,
+                        ladoCamera: document.getElementById('ladoCamera').value,
+                        ladoRaquete: document.getElementById('ladoRaquete').value,
+                        tipoMovimento: document.getElementById('tipoMovimento').value
+                    });
+                }
+                
+                correctionSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        function cancelCorrection() {
+            console.log('❌ Canceling correction');
+            const correctionSection = document.getElementById('correctionSection');
+            const correctionTrigger = document.getElementById('correctionTrigger');
+            
+            if (correctionSection && correctionTrigger) {
+                correctionSection.style.display = 'none';
+                correctionTrigger.style.display = 'block';
+            }
+        }
+        
+        async function applyCorrectionManual() {
+            console.log('[CORRECTION] Applying movement correction');
+            
+            const racketSide = document.getElementById('correctionRacketSide').value;
+            const movementType = document.getElementById('correctionMovementType').value;
+            const correctedMovement = `${racketSide}_${movementType}`;
+            
+            console.log(`[CORRECTION] Selected racket side: ${racketSide}`);
+            console.log(`[CORRECTION] Selected movement type: ${movementType}`);
+            console.log(`[CORRECTION] Final corrected movement: ${correctedMovement}`);
+            
+            const applyCorrectionBtn = document.getElementById('applyCorrectionBtn');
+            const cancelCorrectionBtn = document.getElementById('cancelCorrectionBtn');
+            
+            // Disable buttons during processing
+            applyCorrectionBtn.disabled = true;
+            cancelCorrectionBtn.disabled = true;
+            applyCorrectionBtn.textContent = 'Processando...';
+            
+            console.log('[CORRECTION] Buttons disabled, starting request');
+            
+            try {
+                console.log(`[CORRECTION] Correcting to: ${correctedMovement}`);
+                
+                const formData = new FormData();
+                formData.append('analysis_id', currentAnalysisId || 'temp_correction');
+                formData.append('corrected_movement', correctedMovement);
+                formData.append('original_metadata', currentOriginalMetadata || '{}');
+                
+                console.log(`[CORRECTION] FormData prepared:`);
+                console.log(`[CORRECTION]   analysis_id: ${currentAnalysisId || 'temp_correction'}`);
+                console.log(`[CORRECTION]   corrected_movement: ${correctedMovement}`);
+                console.log(`[CORRECTION]   original_metadata: ${currentOriginalMetadata || '{}'}`);
+                
+                const requestUrl = `${API_BASE}/correct-movement`;
+                console.log(`[CORRECTION] Sending correction request to: ${requestUrl}`);
+                
+                const response = await fetch(requestUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                console.log(`[CORRECTION] Response status: ${response.status}`);
+                console.log(`[CORRECTION] Response ok: ${response.ok}`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`[CORRECTION] Response error: ${errorText}`);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const correctionResult = await response.json();
+                console.log('[CORRECTION] Correction result received:', correctionResult);
+                console.log(`[CORRECTION] Result success: ${correctionResult.success}`);
+                console.log(`[CORRECTION] Result movement: ${correctionResult.detected_movement}`);
+                console.log(`[CORRECTION] Result confidence: ${correctionResult.confidence}`);
+                
+                const professionalComparisons = correctionResult.professional_comparisons || [];
+                console.log(`[CORRECTION] Professional comparisons: ${professionalComparisons.length} items`);
+                
+                if (professionalComparisons.length > 0) {
+                    console.log('[CORRECTION] Professional matches found:');
+                    professionalComparisons.forEach((comp, index) => {
+                        console.log(`[CORRECTION]   ${index + 1}. ${comp.professional_name}: ${comp.similarity_percentage}%`);
+                    });
+                } else {
+                    console.warn('[CORRECTION] No professional matches found in result');
+                }
+                
+                if (correctionResult.success) {
+                    console.log('[CORRECTION] Correction was successful, updating interface');
+                    
+                    // Hide correction section
+                    console.log('[CORRECTION] Hiding correction section');
+                    document.getElementById('correctionSection').style.display = 'none';
+                    
+                    // Update only the movement description, keep everything else
+                    const movementDescContainer = document.getElementById('movementDescription');
+                    console.log('[CORRECTION] Found movement description container:', !!movementDescContainer);
+                    
+                    if (movementDescContainer) {
+                        const movementDisplayName = correctedMovement.replace('_', ' ').replace('forehand', 'Forehand').replace('backhand', 'Backhand').replace('drive', 'Drive').replace('push', 'Push');
+                        console.log(`[CORRECTION] Updating movement display name to: ${movementDisplayName}`);
+                        
+                        movementDescContainer.innerHTML = `
+                            <div style="
+                                background: linear-gradient(135deg, #e8f5e8 0%, #f3e5f5 100%);
+                                color: #2e7d32;
+                                padding: 14px 25px;
+                                border-radius: 20px;
+                                margin: 0 auto;
+                                font-weight: 600;
+                                display: inline-block;
+                                box-shadow: 0 3px 12px rgba(46, 125, 50, 0.15);
+                                border: 2px solid rgba(46, 125, 50, 0.1);
+                                font-size: 15px;
+                                letter-spacing: 0.3px;
+                            ">
+                                <span style="margin-right: 8px;">🏓</span>
+                                <span style="color: #1b5e20; font-weight: 700;">${movementDisplayName}</span>
+                                <span style="margin: 0 8px; color: #757575;">•</span>
+                                <span style="color: #2e7d32; font-weight: 600;">${currentAnalysisResult.dominant_hand_display || 'Mão dominante'}</span>
+                                <span style="
+                                    background: #4caf50;
+                                    color: white;
+                                    padding: 3px 8px;
+                                    border-radius: 12px;
+                                    font-size: 11px;
+                                    margin-left: 10px;
+                                    font-weight: 700;
+                                    text-transform: uppercase;
+                                    letter-spacing: 0.5px;
+                                ">CORRIGIDO</span>
+                            </div>
+                        `;
+                        console.log('[CORRECTION] Movement description updated successfully');
+                    } else {
+                        console.error('[CORRECTION] Movement description container not found');
+                    }
+                    
+                    // Update professional recommendations section with full format
+                    const resultsDiv = document.getElementById('results');
+                    console.log('[CORRECTION] Found results div:', !!resultsDiv);
+                    console.log('[CORRECTION] Professional comparisons available:', !!correctionResult.professional_comparisons);
+                    console.log('[CORRECTION] Professional comparisons count:', correctionResult.professional_comparisons ? correctionResult.professional_comparisons.length : 0);
+                    
+                    if (resultsDiv && correctionResult.professional_comparisons) {
+                        // Find and update the professional comparison section by text content
+                        const allH3s = resultsDiv.querySelectorAll('h3');
+                        console.log(`[CORRECTION] Found ${allH3s.length} H3 elements to search`);
+                        
+                        let professionalSection = null;
+                        
+                        for (let i = 0; i < allH3s.length; i++) {
+                            const h3 = allH3s[i];
+                            const h3Text = h3.textContent;
+                            console.log(`[CORRECTION] Checking H3 ${i}: "${h3Text}"`);
+                            
+                            if (h3Text.includes('Comparações com Profissionais') || h3Text.includes('Comparação com Profissionais')) {
+                                professionalSection = h3.parentElement;
+                                console.log(`[CORRECTION] Found professional section at H3 ${i}`);
+                                break;
+                            }
+                        }
+                        
+                        console.log('[CORRECTION] Professional section found:', !!professionalSection);
+                        
+                        if (professionalSection) {
+                            console.log('[CORRECTION] Generating full format professional section');
+                            
+                            // Use the same format as the original analysis
+                            let professionalComparisons = `
+                                <div style="margin-top: 30px;">
+                                    <h3 style="color: #2c5530;">Comparações com Profissionais (${correctionResult.professional_comparisons.length}) - CORRIGIDO</h3>
+                                    ${correctionResult.professional_comparisons.slice(0, 3).map(comp => {
+                                        // Create detailed comparison table if data is available
+                                        let comparisonTable = '';
+                                        if (comp.detailed_comparison && comp.detailed_comparison.individual_similarities) {
+                                            const similarities = comp.detailed_comparison.individual_similarities;
+                                            const weights = comp.detailed_comparison.weights_used;
+                                            const userMetrics = comp.detailed_comparison.user_metrics;
+                                            const profMetrics = comp.detailed_comparison.professional_metrics;
+                                            
+                                            // Parameter names mapping
+                                            const parameterNames = {
+                                                'elbow_variation': 'Variação do Cotovelo',
+                                                'coordination': 'Coordenação',
+                                                'amplitude': 'Amplitude do Movimento',
+                                                'velocity': 'Velocidade Máxima',
+                                                'temporal_pattern': 'Padrão Temporal',
+                                                'movement_signature': 'Assinatura do Movimento'
+                                            };
+                                            
+                                            // Format value function
+                                            const formatValue = (value, param) => {
+                                                if (value === undefined || value === null) return 'N/A';
+                                                switch(param) {
+                                                    case 'elbow_variation': return value.toFixed(1) + '°';
+                                                    case 'coordination': return (value * 100).toFixed(1) + '%';
+                                                    case 'amplitude': return (value * 100).toFixed(1) + '%';
+                                                    case 'velocity': return value.toFixed(3) + ' px/f';
+                                                    case 'temporal_pattern': return value || 'N/A';
+                                                    case 'movement_signature': return value.toFixed(3);
+                                                    default: return value.toString();
+                                                }
+                                            };
+                                            
+                                            comparisonTable = `
+                                                <div style="margin-top: 15px;">
+                                                    <h4 style="color: #2c5530; margin-bottom: 10px; font-size: 14px;">Análise Comparativa Detalhada</h4>
+                                                    <div style="overflow-x: auto;">
+                                                        <table class="comparison-table">
+                                                            <thead>
+                                                            <tr style="background: linear-gradient(135deg, #4a7c59 0%, #2c5530 100%); color: white;">
+                                                                <th style="padding: 10px; text-align: left; border-right: 1px solid rgba(255,255,255,0.2);">Parâmetro</th>
+                                                                <th style="padding: 10px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2);">Você</th>
+                                                                <th style="padding: 10px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2);">${comp.professional_name}</th>
+                                                                <th style="padding: 10px; text-align: center; border-right: 1px solid rgba(255,255,255,0.2);">Similaridade</th>
+                                                                <th style="padding: 10px; text-align: center;">Peso</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            ${Object.keys(similarities).map((param, index) => {
+                                                                const similarity = similarities[param];
+                                                                const weight = weights[param] || 0;
+                                                                const userValue = userMetrics[param];
+                                                                const profValue = profMetrics[param];
+                                                                const paramName = parameterNames[param] || param;
+                                                                
+                                                                // Calculate color based on similarity
+                                                                const similarityPercent = similarity * 100;
+                                                                let similarityColor = '#f44336'; // Red
+                                                                if (similarityPercent >= 80) similarityColor = '#4caf50'; // Green
+                                                                else if (similarityPercent >= 60) similarityColor = '#ffc107'; // Yellow
+                                                                else if (similarityPercent >= 40) similarityColor = '#ff9800'; // Orange
+                                                                
+                                                                return `
+                                                                    <tr style="border-bottom: 1px solid #e0e0e0; ${index % 2 === 0 ? 'background: #f9f9f9;' : 'background: white;'}">
+                                                                        <td style="padding: 8px; font-weight: 500; color: #2c5530;">${paramName}</td>
+                                                                        <td style="padding: 8px; text-align: center; font-family: monospace;">${formatValue(userValue, param)}</td>
+                                                                        <td style="padding: 8px; text-align: center; font-family: monospace;">${formatValue(profValue, param)}</td>
+                                                                        <td style="padding: 8px; text-align: center;">
+                                                                            <div style="display: flex; align-items: center; justify-content: center; gap: 5px;">
+                                                                                <div style="background: #e0e0e0; height: 6px; width: 50px; border-radius: 3px; overflow: hidden;">
+                                                                                    <div style="background: ${similarityColor}; height: 100%; width: ${similarityPercent}%; transition: width 0.3s ease;"></div>
+                                                                                </div>
+                                                                                <span style="color: ${similarityColor}; font-weight: 600; font-size: 11px;">${similarityPercent.toFixed(1)}%</span>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td style="padding: 8px; text-align: center; color: #666; font-size: 11px;">${(weight * 100).toFixed(0)}%</td>
+                                                                    </tr>
+                                                                `;
+                                                            }).join('')}
+                                                        </tbody>
+                                                    </table>
+                                                    <div style="margin-top: 8px; font-size: 10px; color: #666;">
+                                                        <div style="text-align: center; margin-bottom: 5px;">
+                                                            <span>🟢 Verde (80%+): Excelente | 🟡 Amarelo (60-79%): Boa | 🟠 Laranja (40-59%): Regular | 🔴 Vermelho (<40%): Precisa melhorar</span>
+                                                        </div>
+                                                        <div style="text-align: center; font-size: 9px; color: #888;">
+                                                            <strong>Unidades:</strong> ° = graus | % = percentual | px/f = pixels por frame
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            `;
+                                        }
+                                        
+                                        return `
+                                            <div class="professional-comparison" style="margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 12px; border-left: 4px solid #ff9800;">
+                                                <div style="display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 15px;">
+                                                    <div style="display: flex; flex-direction: column; justify-content: center; flex-grow: 1;">
+                                                        <div style="margin-bottom: 5px;">
+                                                            <strong style="font-size: 16px; color: #2c5530;">${comp.professional_name}</strong>
+                                                            <span style="margin-left: 10px; padding: 2px 8px; background: #ff9800; color: white; border-radius: 12px; font-size: 11px; font-weight: 600;">
+                                                                CORRIGIDO
+                                                            </span>
+                                                        </div>
+                                                        <div>
+                                                            <span style="padding: 4px 12px; background: #4caf50; color: white; border-radius: 20px; font-size: 14px; font-weight: 600;">
+                                                                ${(comp.similarity_score * 100).toFixed(1)}% Similar
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: flex; align-items: center; margin-left: 15px;">
+                                                        <button 
+                                                            onclick="generateProfessionalCycle('${comp.professional_name}')" 
+                                                            style="padding: 8px 16px; background: #2196f3; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; transition: background 0.3s; height: fit-content;"
+                                                            onmouseover="this.style.background='#1976d2'"
+                                                            onmouseout="this.style.background='#2196f3'"
+                                                        >
+                                                            Gerar Vídeo do Profissional
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Container para vídeo do profissional -->
+                                                <div id="professionalVideo_${comp.professional_name.replace(/\s+/g, '_')}" style="margin-top: 15px; text-align: center; display: none;">
+                                                    <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border: 2px dashed #4caf50;">
+                                                        <p style="margin: 0; color: #2c5530; font-weight: 600;">Vídeo do Profissional (Em breve)</p>
+                                                    </div>
+                                                </div>
+                                                
+                                                ${comparisonTable}
+                                                
+                                                <div style="margin-top: 15px; padding: 12px; background: white; border-radius: 8px; border-left: 3px solid #2196f3;">
+                                                    <strong style="color: #2196f3;">💡 Recomendações:</strong>
+                                                    <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                                                        ${comp.recommendations && comp.recommendations.length > 0 
+                                                            ? comp.recommendations.slice(0, 3).map(rec => `<li style="margin: 4px 0; color: #555;">${rec}</li>`).join('')
+                                                            : '<li style="color: #888;">Análise detalhada disponível com movimento corrigido.</li>'}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            `;
+                            
+                            console.log('[CORRECTION] Replacing professional section with full format');
+                            professionalSection.outerHTML = professionalComparisons;
+                            console.log('[CORRECTION] Professional section updated successfully');
+                        } else {
+                            console.log('⚠️ Professional section not found, adding new section');
+                            // Se não encontrar a seção, adiciona uma nova no final
+                            let newProfessionalHTML = `
+                                <div style="margin-top: 30px; background: white; padding: 25px; border-radius: 15px; border: 3px solid #ff9800;">
+                                    <h3 style="color: #2c5530; margin-bottom: 20px; text-align: center;">
+                                        🏆 Comparação com Profissionais (CORRIGIDO)
+                                    </h3>
+                            `;
+                            
+                            correctionResult.professional_recommendations.forEach((prof, index) => {
+                                const bgColor = index === 0 ? '#fff8e1' : index === 1 ? '#f3e5f5' : '#e8f5e9';
+                                const borderColor = index === 0 ? '#ffc107' : index === 1 ? '#9c27b0' : '#4caf50';
+                                
+                                newProfessionalHTML += `
+                                    <div style="background: ${bgColor}; border: 2px solid ${borderColor}; border-radius: 12px; padding: 20px; margin-bottom: 15px;">
+                                        <h4 style="margin: 0 0 10px 0; color: #2c5530;">${prof.rank}º ${prof.professional_name}</h4>
+                                        <p style="margin: 5px 0; color: #4a7c59;"><strong>Similaridade:</strong> ${prof.similarity_percentage}%</p>
+                                        <p style="margin: 5px 0; color: #4a7c59;"><strong>Notas:</strong> ${prof.technique_notes}</p>
+                                    </div>
+                                `;
+                            });
+                            
+                            newProfessionalHTML += '</div>';
+                            resultsDiv.insertAdjacentHTML('beforeend', newProfessionalHTML);
+                        }
+                    } else {
+                        console.log('[CORRECTION] No results div or professional comparisons available');
+                        console.log('[CORRECTION] Results div exists:', !!resultsDiv);
+                        console.log('[CORRECTION] Professional comparisons exist:', !!correctionResult.professional_comparisons);
+                    }
+                    
+                    console.log('[CORRECTION] Interface update completed');
+                    
+                    // Show success message
+                    const successMessage = `Movimento corrigido com sucesso para: ${correctedMovement.replace('_', ' ')}`;
+                    console.log('[CORRECTION] Showing success message:', successMessage);
+                    alert(successMessage);
+                    
+                    console.log('[CORRECTION] Correction process completed successfully');
+                    
+                } else {
+                    console.error('[CORRECTION] Correction failed on server side');
+                    console.error('[CORRECTION] Server response:', correctionResult);
+                    throw new Error(correctionResult.error || 'Erro desconhecido na correção');
+                }
+                
+            } catch (error) {
+                console.error('[CORRECTION] Error during correction:', error);
+                console.error('[CORRECTION] Error type:', error.constructor.name);
+                console.error('[CORRECTION] Error message:', error.message);
+                
+                if (error.stack) {
+                    console.error('[CORRECTION] Error stack:', error.stack);
+                }
+                
+                alert(`Erro durante a correção: ${error.message}`);
+            } finally {
+                console.log('[CORRECTION] Re-enabling buttons');
+                
+                // Re-enable buttons
+                applyCorrectionBtn.disabled = false;
+                cancelCorrectionBtn.disabled = false;
+                applyCorrectionBtn.textContent = 'Aplicar Correção';
+                
+                console.log('[CORRECTION] Function completed');
+            }
+        }
+        
+        // Função removida - metadados sugeridos não existem mais
+    </script>
+</body>
+</html>
